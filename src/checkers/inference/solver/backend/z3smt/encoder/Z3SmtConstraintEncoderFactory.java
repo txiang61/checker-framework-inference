@@ -1,4 +1,4 @@
-package checker.inference.solver.backend.z3smt.encoder;
+package checkers.inference.solver.backend.z3smt.encoder;
 
 import checkers.inference.solver.backend.encoder.AbstractConstraintEncoderFactory;
 import checkers.inference.solver.backend.z3smt.Z3SmtFormatTranslator;
