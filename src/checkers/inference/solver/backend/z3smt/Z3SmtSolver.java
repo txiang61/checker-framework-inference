@@ -88,8 +88,6 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
     // Main entry point
     @Override
     public Map<Integer, AnnotationMirror> solve() {
-        Map<Integer, AnnotationMirror> result;
-
         // serialize based on user choice of running in optimizing or non-optimizing mode
         optimizingMode = solverEnvironment.getBoolArg(Z3SolverEngineArg.optimizingMode);
         getUnsatCore = false;
@@ -111,16 +109,13 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
                 "smt_serialization_time(millisec)", serializationEnd - serializationStart);
         Statistics.addOrIncrementEntry("smt_solving_time(millisec)", solvingEnd - solvingStart);
 
-        if (results != null) {
-            result =
-                    formatTranslator.decodeSolution(
-                            results, solverEnvironment.processingEnvironment);
-        } else {
+        if (results == null) {
             System.err.println("\n\n!!! The set of constraints is unsatisfiable! !!!");
-            result = null;
+            return null;
         }
-
-        return result;
+        
+        return formatTranslator.decodeSolution(
+                        results, solverEnvironment.processingEnvironment);
     }
 
     @Override
