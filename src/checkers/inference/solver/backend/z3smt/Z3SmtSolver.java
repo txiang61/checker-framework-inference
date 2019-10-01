@@ -1,8 +1,6 @@
 package checkers.inference.solver.backend.z3smt;
 
 import checkers.inference.InferenceMain;
-import checkers.inference.model.ArithmeticConstraint;
-import checkers.inference.model.ArithmeticConstraint.ArithmeticOperationKind;
 import checkers.inference.model.ComparableConstraint;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.Slot;
@@ -113,40 +111,6 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
                 "smt_serialization_time(millisec)", serializationEnd - serializationStart);
         Statistics.addOrIncrementEntry("smt_solving_time(millisec)", solvingEnd - solvingStart);
 
-        // Debug use, finds out number of calls to each instrumented method
-        // TODO: use updated stats package to print out the counters
-        System.err.println("=== Arithmetic Constraints Printout ===");
-        Map<ArithmeticOperationKind, Integer> arithmeticConstraintCounters = new HashMap<>();
-        for (ArithmeticOperationKind kind : ArithmeticOperationKind.values()) {
-            arithmeticConstraintCounters.put(kind, 0);
-        }
-        for (Constraint constraint : constraints) {
-            if (constraint instanceof ArithmeticConstraint) {
-                ArithmeticConstraint arithmeticConstraint = (ArithmeticConstraint) constraint;
-                ArithmeticOperationKind kind = arithmeticConstraint.getOperation();
-                arithmeticConstraintCounters.put(kind, arithmeticConstraintCounters.get(kind) + 1);
-            }
-        }
-        for (ArithmeticOperationKind kind : ArithmeticOperationKind.values()) {
-            System.err.println(
-                    " Made arithmetic "
-                            + kind.getSymbol()
-                            + " constraint: "
-                            + arithmeticConstraintCounters.get(kind));
-        }
-
-        // TODO: update parse scripts to interpret output of
-        // "comparableconstraint"
-        // System.err.println("=== Comparison Constraints Printout ===");
-        // int comparableConstraints = 0;
-        // for (Constraint constraint : constraints) {
-        // if (constraint instanceof ComparableConstraint) {
-        // comparableConstraints++;
-        // }
-        // }
-        // System.err.println(" Made comparison constraint: " +
-        // comparableConstraints);
-
         if (results != null) {
             result =
                     formatTranslator.decodeSolution(
@@ -176,19 +140,10 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         Statistics.addOrIncrementEntry(
                 "smt_unsat_solving_time(millisec)", solvingEnd - solvingStart);
 
-        // System.err.println();
-        // System.err.println("Unsatisfiable constraints: " + String.join(" ",
-        // unsatConstraintIDs));
-        // System.err.println();
-
         List<Constraint> unsatConstraints = new ArrayList<>();
 
         for (String constraintID : unsatConstraintIDs) {
             Constraint c = serializedConstraints.get(constraintID);
-            // System.err.println(constraintID + " :");
-            // System.err.println(c);
-            // System.err.println(c.getLocation());
-            // System.err.println();
             unsatConstraints.add(c);
         }
 
@@ -219,7 +174,7 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         } else {
             smtFileContents.append("(get-model)\n");
         }
-
+        
         System.err.println("Writing constraints to file: " + constraintsFile);
 
         writeConstraintsToSMTFile();
@@ -238,109 +193,11 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         // write a copy in append mode to stats file for later bulk analysis
         FileUtils.appendFile(new File(constraintsStatsFile), fileContents);
     }
-    //
-    //    private String generateZ3Constraint(BoolExpr serializedConstraint, String
-    // constraintSource) {
-    //        Expr simplifiedConstraint = serializedConstraint.simplify();
-    //
-    //        if (simplifiedConstraint.isTrue()) {
-    //            // This only works if the BoolExpr is directly the value Z3True.
-    //            // Still a good
-    //            // filter, but doesn't filter enough.
-    //            // EG: (and (= false false) (= false false) (= 0 0) (= 0 0) (= 0
-    //            // 0))
-    //            // Skip tautology.
-    //            // System.err.println(" simplified to tautology.");
-    //            return "";
-    //        }
-    //
-    //        if (simplifiedConstraint.isFalse()) {
-    //            throw new BugInCF("impossible constraint: " + constraintSource);
-    //        }
-    //
-    //        // TODO: properly support adding wellformedness constraint as a debug output option
-    // for unsat dump
-    //
-    //        return generateZ3Constraint(simplifiedConstraint.toString());
-    //    }
-    //
-    //    private String generateZ3Constraint(String clause) {
-    //        return "(assert " + clause + ")" + System.lineSeparator();
-    //    }
-    //
-    //    private String generateZ3UnsatCoreConstraint(String clause, String constraintName) {
-    //        return "(assert (! " + clause + " :named " + constraintName + "))" +
-    // System.lineSeparator();
-    //    }
-    //
-    //    private void addConstraint(BoolExpr serializedConstraint, Constraint constraint) {
-    //        Expr simplifiedConstraint = serializedConstraint.simplify();
-    //
-    //        if (simplifiedConstraint.isTrue()) {
-    //            // This only works if the BoolExpr is directly the value Z3True.
-    //            // Still a good
-    //            // filter, but doesn't filter enough.
-    //            // EG: (and (= false false) (= false false) (= 0 0) (= 0 0) (= 0
-    //            // 0))
-    //            // Skip tautology.
-    //            // System.err.println(" simplified to tautology.");
-    //            return;
-    //        }
-    //
-    //        if (simplifiedConstraint.isFalse()) {
-    //            final ToStringSerializer toStringSerializer = new ToStringSerializer(false);
-    //            throw new BugInCF(
-    //                    "impossible constraint: "
-    //                            + constraint.serialize(toStringSerializer)
-    //                            + "\nSerialized:\n"
-    //                            + serializedConstraint);
-    //        }
-    //
-    //        solver.Assert(serializedConstraint);
-    //    }
-    //
-    //    private void addSoftConstraint(Constraint constraint, BoolExpr serializedConstraint) {
-    //        Expr simplifiedConstraint = serializedConstraint.simplify();
-    //
-    //        if (simplifiedConstraint.isTrue()) {
-    //            // This only works if the BoolExpr is directly the value Z3True.
-    //            // Still a good
-    //            // filter, but doesn't filter enough.
-    //            // EG: (and (= false false) (= false false) (= 0 0) (= 0 0) (= 0
-    //            // 0))
-    //            // Skip tautology.
-    //            // System.err.println(" simplified to tautology.");
-    //            return;
-    //        }
-    //
-    //        if (simplifiedConstraint.isFalse()) {
-    //            final ToStringSerializer toStringSerializer = new ToStringSerializer(false);
-    //            throw new BugInCF(
-    //                    "impossible constraint: "
-    //                            + constraint.serialize(toStringSerializer)
-    //                            + "\nSerialized:\n"
-    //                            + serializedConstraint);
-    //        }
-    //
-    //        solver.AssertSoft(serializedConstraint);
-    //    }
 
     protected void encodeAllSlots() {
         // preprocess slots
         formatTranslator.preAnalyzeSlots(slots);
-
-        //        StringBuilder z3SlotDefinitions = new StringBuilder();
-        //
-        //        // generate slot definitions
-        //        for (Slot slot : slots) {
-        //            if (slot.isVariable()) {
-        //                String slotDefinition =
-        //                        formatTranslator.generateZ3SlotDeclaration((VariableSlot) slot);
-        //                System.err.println(slotDefinition);
-        //                z3SlotDefinitions.append(slotDefinition);
-        //            }
-        //        }
-
+        
         // generate slot constraints
         for (Slot slot : slots) {
             if (slot.isVariable()) {
@@ -367,10 +224,6 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
 
         // append slot definitions to overall smt file
         smtFileContents.append(slotDefinitionsAndConstraints.substring(0, truncateIndex));
-
-        // debug use:
-        // Write Slots to file
-        FileUtils.appendFile(new File(pathToProject + "/slots.smt"), solver.toString());
     }
 
     @Override
@@ -380,20 +233,7 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         StringBuffer constraintSmtFileContents = new StringBuffer();
 
         for (Constraint constraint : constraints) {
-            // System.err.println("Getting next item.");
-
-            // System.err.println(
-            // " Serializing Constraint " + current + " / " + total + " : " +
-            // constraint);
-
-            // if (current % 100 == 0) {
-            // System.err.println("=== Running GC ===");
-            // Runtime.getRuntime().gc(); // trigger garbage collector
-            // }
-
             BoolExpr serializedConstraint = constraint.serialize(formatTranslator);
-
-            // System.err.println(" Constraint serialized. ");
 
             if (serializedConstraint == null) {
                 // TODO: Should error abort if unsupported constraint detected.
@@ -404,23 +244,16 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
                 System.err.println(
                         "Unsupported constraint detected! Constraint type: "
                                 + constraint.getClass().getSimpleName());
-                // current++;
                 continue;
             }
-
-            // System.err.println(" Constraint \n" + serializedConstraint
-            // + "\n simplified :\n " + serializedConstraint.simplify());
 
             Expr simplifiedConstraint = serializedConstraint.simplify();
 
             if (simplifiedConstraint.isTrue()) {
                 // This only works if the BoolExpr is directly the value Z3True.
-                // Still a good
-                // filter, but doesn't filter enough.
-                // EG: (and (= false false) (= false false) (= 0 0) (= 0 0) (= 0
-                // 0))
+                // Still a good filter, but doesn't filter enough.
+                // EG: (and (= false false) (= false false) (= 0 0) (= 0 0) (= 0 0))
                 // Skip tautology.
-                // System.err.println(" simplified to tautology.");
                 current++;
                 continue;
             }
@@ -473,8 +306,7 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
                 }
             }
 
-            // generate soft constraint for comparisons that their args are
-            // equal
+            // generate soft constraint for comparisons that their args are equal
             if (optimizingMode && constraint instanceof ComparableConstraint) {
                 ComparableConstraint cc = (ComparableConstraint) constraint;
 
@@ -493,17 +325,11 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
             }
 
             current++;
-            // System.err.println(" Added constraint. HasNext? " +
-            // iter.hasNext());
         }
 
         String constraintSmt = constraintSmtFileContents.toString();
 
         smtFileContents.append(constraintSmt);
-
-        // debug use
-        // Write Constraints to file
-        FileUtils.appendFile(new File(pathToProject + "/constraints.smt"), constraintSmt);
     }
 
     private List<String> runZ3Solver() {
@@ -514,9 +340,6 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         } else {
             command = new String[] {z3Program, constraintsUnsatCoreFile};
         }
-
-        // TODO: build Typecheckunits here?
-        // Map<Integer, TypecheckUnit> solutionSlots = new HashMap<>();
 
         // stores results from z3 program output
         final List<String> results = new ArrayList<>();
@@ -532,35 +355,7 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         return exitStatus == 0 ? results : null;
     }
 
-    // Sample satisfying output format:
-    /* @formatter:off // this is for eclipse formatter */
-    /*
-    sat
-    (model
-      (define-fun |338-BOT| () Bool
-        false)
-      (define-fun |509-TOP| () Bool
-        false)
-      (define-fun |750-m| () Int
-        (- 9))
-      (define-fun |355-s| () Int
-        0)
-      (define-fun |790-PREFIX| () Int
-        0)
-    )
-    */
-    /* @formatter:on // this is for eclipse formatter */
-
-    // Sample unsat output format:
-    /* @formatter:off // this is for eclipse formatter */
-    /*
-    unsat
-    (SubtypeConstraint58 ArithmeticConstraint73 EqualityConstraint188 SubtypeConstraint553)
-    */
-    /* @formatter:on // this is for eclipse formatter */
-
-    // parses the STD output from the z3 process and handles SAT and UNSAT
-    // outputs
+    // parses the STD output from the z3 process and handles SAT and UNSAT outputs
     private void parseStdOut(BufferedReader stdOut, List<String> results) {
         String line = "";
 

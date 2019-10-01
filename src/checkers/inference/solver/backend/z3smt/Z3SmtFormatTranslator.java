@@ -77,8 +77,6 @@ public abstract class Z3SmtFormatTranslator<SlotEncodingT, SlotSolutionT>
      */
     public void preAnalyzeSlots(Collection<Slot> slots) {}
 
-    public abstract String generateZ3SlotDeclaration(VariableSlot slot);
-
     public abstract BoolExpr encodeSlotWellformnessConstraint(VariableSlot slot);
 
     public abstract BoolExpr encodeSlotPreferenceConstraint(VariableSlot slot);
