@@ -283,15 +283,14 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
             }
 
             // generate a soft constraint that we prefer equality for subtype
-            // TODO: perhaps prefer not bottom and prefer not top will suffice?
             if (optimizingMode && constraint instanceof SubtypeConstraint) {
                 SubtypeConstraint stc = (SubtypeConstraint) constraint;
-
+                
                 Constraint eqc =
                         InferenceMain.getInstance()
                                 .getConstraintManager()
                                 .createEqualityConstraint(stc.getSubtype(), stc.getSupertype());
-
+                
                 Expr simplifiedEQC = eqc.serialize(formatTranslator).simplify();
 
                 if (!simplifiedEQC.isTrue()) {
