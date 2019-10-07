@@ -26,7 +26,7 @@ if [ -d $CHECKERFRAMEWORK ] ; then
 else
     REPO=`/tmp/plume-scripts/git-find-fork ${CI_ORGANIZATION} typetools checker-framework`
     BRANCH=`/tmp/plume-scripts/git-find-branch ${REPO} ${CI_BRANCH}`
-    echo "About to execute: (cd $CHECKERFRAMEWORK/.. && git clone -b ${BRANCH} --single-branch --depth 1 ${REPO}) || (cd .. && git clone -b ${BRANCH} --single-branch --depth 1 ${REPO})"
+    echo "About to execute: (cd .. && git clone -b $BRANCH --single-branch --depth 1 $REPO)"
     (cd $CHECKERFRAMEWORK/.. && git clone -b ${BRANCH} --single-branch --depth 1 ${REPO}) || (cd .. && git clone -b ${BRANCH} --single-branch --depth 1 ${REPO})
 fi
 
