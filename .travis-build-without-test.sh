@@ -17,7 +17,7 @@ export PATH=$AFU/scripts:$JAVA_HOME/bin:$PATH
 
 git -C /tmp/plume-scripts pull > /dev/null 2>&1 \
   || git -C /tmp clone --depth 1 -q https://github.com/plume-lib/plume-scripts.git
-eval `/tmp/plume-scripts/ci-info typetools`
+eval `/tmp/plume-scripts/ci-info opprop`
 
 ## Build Checker Framework
 if [ -d $CHECKERFRAMEWORK ] ; then
@@ -31,7 +31,7 @@ else
 fi
 
 # This also builds annotation-tools and jsr308-langtools
-(cd $CHECKERFRAMEWORK && checker/bin-devel/build.sh downloadjdk jdk8)
+(cd $CHECKERFRAMEWORK && ./.travis-build-without-test.sh downloadjdk jdk8)
 
 # Finally build checker-framework-inference
 ./gradlew dist
