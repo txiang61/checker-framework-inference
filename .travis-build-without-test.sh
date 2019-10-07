@@ -17,22 +17,32 @@ export PATH=$AFU/scripts:$JAVA_HOME/bin:$PATH
 
 git -C /tmp/plume-scripts pull > /dev/null 2>&1 \
   || git -C /tmp clone --depth 1 -q https://github.com/plume-lib/plume-scripts.git
-SLUGOWNER=`/tmp/plume-scripts/git-organization opprop`
+eval `/tmp/plume-scripts/ci-info typetools`
 
 ## Build Checker Framework
 if [ -d $CHECKERFRAMEWORK ] ; then
     # Fails if not currently on a branch
     git -C $CHECKERFRAMEWORK pull || true
 else
-    [ -d /tmp/plume-scripts ] || (cd /tmp && git clone --depth 1 https://github.com/plume-lib/plume-scripts.git)
-    REPO=`/tmp/plume-scripts/git-find-fork ${SLUGOWNER} typetools checker-framework`
-    BRANCH=`/tmp/plume-scripts/git-find-branch ${REPO} ${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}`
-    echo "About to execute: (cd .. && git clone -b $BRANCH --single-branch --depth 1 $REPO)"
+    REPO=`/tmp/plume-scripts/git-find-fork ${CI_ORGANIZATION} typetools checker-framework`
+    BRANCH=`/tmp/plume-scripts/git-find-branch ${REPO} ${CI_BRANCH}`
+    echo "About to execute: (cd $CHECKERFRAMEWORK/.. && git clone -b ${BRANCH} --single-branch --depth 1 ${REPO}) || (cd .. && git clone -b ${BRANCH} --single-branch --depth 1 ${REPO})"
     (cd $CHECKERFRAMEWORK/.. && git clone -b ${BRANCH} --single-branch --depth 1 ${REPO}) || (cd .. && git clone -b ${BRANCH} --single-branch --depth 1 ${REPO})
 fi
 
-# This also builds annotation-tools and jsr308-langtools
-(cd $CHECKERFRAMEWORK && ./.travis-build-without-test.sh downloadjdk jdk8)
+# This also builds annotation-tools
+(cd $CHECKERFRAMEWORK && checker/bin-devel/build.sh downloadjdk jdk8)
+
+# jsr308-langtools
+if [ -d ../jsr308-langtools ] ; then
+    (cd ../jsr308-langtools && hg pull && hg update)
+else
+    echo "Running:  (cd .. && hg clone https://bitbucket.org/eisop/jsr308-langtools)"
+    (cd .. && (hg clone https://bitbucket.org/eisop/jsr308-langtools || hg clone https://bitbucket.org/eisop/jsr308-langtools))
+    echo "... done: (cd .. && hg clone https://bitbucket.org/eisop/jsr308-langtools)"
+fi
+(cd ../jsr308-langtools/ && ./.travis-build-without-test.sh)
+
 
 # Finally build checker-framework-inference
 ./gradlew dist
