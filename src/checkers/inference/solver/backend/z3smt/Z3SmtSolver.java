@@ -1,6 +1,8 @@
 package checkers.inference.solver.backend.z3smt;
 
 import checkers.inference.InferenceMain;
+import checkers.inference.model.ArithmeticConstraint;
+import checkers.inference.model.ArithmeticConstraint.ArithmeticOperationKind;
 import checkers.inference.model.ComparableConstraint;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.Slot;
@@ -108,6 +110,26 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         Statistics.addOrIncrementEntry(
                 "smt_serialization_time(millisec)", serializationEnd - serializationStart);
         Statistics.addOrIncrementEntry("smt_solving_time(millisec)", solvingEnd - solvingStart);
+        
+        System.err.println("=== Arithmetic Constraints Printout ===");
+        Map<ArithmeticOperationKind, Integer> arithmeticConstraintCounters = new HashMap<>();
+        for (ArithmeticOperationKind kind : ArithmeticOperationKind.values()) {
+            arithmeticConstraintCounters.put(kind, 0);
+        }
+        for (Constraint constraint : constraints) {
+            if (constraint instanceof ArithmeticConstraint) {
+                ArithmeticConstraint arithmeticConstraint = (ArithmeticConstraint) constraint;
+                ArithmeticOperationKind kind = arithmeticConstraint.getOperation();
+                arithmeticConstraintCounters.put(kind, arithmeticConstraintCounters.get(kind) + 1);
+            }
+        }
+        for (ArithmeticOperationKind kind : ArithmeticOperationKind.values()) {
+            System.err.println(
+                    " Made arithmetic "
+                            + kind.getSymbol()
+                            + " constraint: "
+                            + arithmeticConstraintCounters.get(kind));
+        }
 
         if (results == null) {
             System.err.println("\n\n!!! The set of constraints is unsatisfiable! !!!");
@@ -294,9 +316,19 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
                 Expr simplifiedEQC = eqc.serialize(formatTranslator).simplify();
 
                 if (!simplifiedEQC.isTrue()) {
-                    constraintSmtFileContents.append("(assert-soft ");
-                    constraintSmtFileContents.append(simplifiedEQC);
-                    constraintSmtFileContents.append(" :weight 1)\n");
+                	if (stc.getSubtype().getKind() == Slot.Kind.CONSTANT) {
+                    	constraintSmtFileContents.append("(assert-soft ");
+                        constraintSmtFileContents.append(simplifiedEQC);
+                        constraintSmtFileContents.append(" :weight 3)\n");
+                    } else if (stc.getSupertype().getKind() == Slot.Kind.CONSTANT) {
+                    	constraintSmtFileContents.append("(assert-soft ");
+                        constraintSmtFileContents.append(simplifiedEQC);
+                        constraintSmtFileContents.append(" :weight 2)\n");
+                    } else {
+                    	constraintSmtFileContents.append("(assert-soft ");
+                        constraintSmtFileContents.append(simplifiedEQC);
+                        constraintSmtFileContents.append(" :weight 1)\n");
+                    }
                 }
             }
 
