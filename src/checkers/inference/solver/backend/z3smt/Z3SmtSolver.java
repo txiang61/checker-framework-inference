@@ -1,10 +1,15 @@
 package checkers.inference.solver.backend.z3smt;
 
-import checkers.inference.InferenceMain;
 import checkers.inference.model.ArithmeticConstraint;
 import checkers.inference.model.ArithmeticConstraint.ArithmeticOperationKind;
+import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
 import checkers.inference.model.Constraint;
+import checkers.inference.model.EqualityConstraint;
+import checkers.inference.model.ExistentialConstraint;
+import checkers.inference.model.ImplicationConstraint;
+import checkers.inference.model.InequalityConstraint;
+import checkers.inference.model.PreferenceConstraint;
 import checkers.inference.model.Slot;
 import checkers.inference.model.SubtypeConstraint;
 import checkers.inference.model.VariableSlot;
@@ -32,7 +37,6 @@ import java.util.Map;
 import javax.lang.model.element.AnnotationMirror;
 import org.checkerframework.javacutil.BugInCF;
 
-// TODO: make this an abstract class with common features
 public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         extends Solver<Z3SmtFormatTranslator<SlotEncodingT, SlotSolutionT>> {
 
@@ -75,16 +79,24 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
             Lattice lattice) {
         super(solverEnvironment, slots, constraints, z3SmtFormatTranslator, lattice);
 
-        // creating solver with timeout
-        // Map<String, String> z3Args = new HashMap<>();
-        // int timeout = 2 * 60 * 1000; // timeout of 2 mins
-        // z3Args.put("timeout", Integer.toString(timeout));
-        // ctx = new Context(z3Args);
+        Map<String, String> z3Args = new HashMap<>();
 
-        // creating solver without timeout
-        ctx = new Context();
+        // add timeout arg
+        if (withTimeout()) {
+            z3Args.put("timeout", Integer.toString(timeout()));
+        }
+        // creating solver
+	    ctx = new Context(z3Args);
 
         z3SmtFormatTranslator.init(ctx);
+    }
+
+    protected boolean withTimeout() {
+        return false;
+    }
+
+    protected int timeout() {
+        return 2 * 60 * 1000; // timeout of 2 mins by default
     }
 
     // Main entry point
@@ -181,6 +193,9 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         serializationStart = System.currentTimeMillis();
         encodeAllSlots();
         encodeAllConstraints();
+        if (optimizingMode) {
+            encodeAllSoftConstraints();
+        }
         serializationEnd = System.currentTimeMillis();
 
         System.err.println("Encoding constraints done!");
@@ -226,9 +241,7 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
                     solver.Assert(wfConstraint);
                 }
                 if (optimizingMode) {
-                    // empty string means no optimization group
-                    solver.AssertSoft(
-                            formatTranslator.encodeSlotPreferenceConstraint(varSlot), 1, "");
+                	encodeSlotPreferenceConstraint(varSlot);
                 }
             }
         }
@@ -295,59 +308,12 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
                 constraintSmtFileContents.append(" :named " + constraintName + "))\n");
 
                 // add constraint to serialized constraints map, so that we can
-                // retrieve later using
-                // the constraint name when outputting the unsat core
+                // retrieve later using the constraint name when outputting the unsat core
                 serializedConstraints.put(constraintName, constraint);
             } else {
                 constraintSmtFileContents.append("(assert ");
                 constraintSmtFileContents.append(clause);
                 constraintSmtFileContents.append(")\n");
-            }
-
-            // generate a soft constraint that we prefer equality for subtype
-            if (optimizingMode && constraint instanceof SubtypeConstraint) {
-                SubtypeConstraint stc = (SubtypeConstraint) constraint;
-                
-                Constraint eqc =
-                        InferenceMain.getInstance()
-                                .getConstraintManager()
-                                .createEqualityConstraint(stc.getSubtype(), stc.getSupertype());
-                
-                Expr simplifiedEQC = eqc.serialize(formatTranslator).simplify();
-
-                if (!simplifiedEQC.isTrue()) {
-                	if (stc.getSubtype().getKind() == Slot.Kind.CONSTANT) {
-                    	constraintSmtFileContents.append("(assert-soft ");
-                        constraintSmtFileContents.append(simplifiedEQC);
-                        constraintSmtFileContents.append(" :weight 3)\n");
-                    } else if (stc.getSupertype().getKind() == Slot.Kind.CONSTANT) {
-                    	constraintSmtFileContents.append("(assert-soft ");
-                        constraintSmtFileContents.append(simplifiedEQC);
-                        constraintSmtFileContents.append(" :weight 2)\n");
-                    } else {
-                    	constraintSmtFileContents.append("(assert-soft ");
-                        constraintSmtFileContents.append(simplifiedEQC);
-                        constraintSmtFileContents.append(" :weight 1)\n");
-                    }
-                }
-            }
-
-            // generate soft constraint for comparisons that their args are equal
-            if (optimizingMode && constraint instanceof ComparableConstraint) {
-                ComparableConstraint cc = (ComparableConstraint) constraint;
-
-                Constraint eqc =
-                        InferenceMain.getInstance()
-                                .getConstraintManager()
-                                .createEqualityConstraint(cc.getFirst(), cc.getSecond());
-
-                Expr simplifiedEQC = eqc.serialize(formatTranslator).simplify();
-
-                if (!simplifiedEQC.isTrue()) {
-                    constraintSmtFileContents.append("(assert-soft ");
-                    constraintSmtFileContents.append(simplifiedEQC);
-                    constraintSmtFileContents.append(" :weight 1)\n");
-                }
             }
 
             current++;
@@ -356,6 +322,75 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         String constraintSmt = constraintSmtFileContents.toString();
 
         smtFileContents.append(constraintSmt);
+    }
+
+    private void encodeAllSoftConstraints() {
+        for (Constraint constraint : constraints) {
+            // Generate a soft constraint for subtype constraint
+            if (constraint instanceof SubtypeConstraint) {
+                encodeSoftSubtypeConstraint((SubtypeConstraint) constraint);
+            }
+            // Generate soft constraint for comparison constraint
+            if (constraint instanceof ComparableConstraint) {
+                encodeSoftComparableConstraint((ComparableConstraint) constraint);
+            }
+            // Generate soft constraint for arithmetic constraint
+            if (constraint instanceof ArithmeticConstraint) {
+                encodeSoftArithmeticConstraint((ArithmeticConstraint) constraint);
+            }
+            // Generate soft constraint for equality constraint
+            if (constraint instanceof EqualityConstraint) {
+                encodeSoftEqualityConstraint((EqualityConstraint) constraint);
+            }
+            // Generate soft constraint for inequality constraint
+            if (constraint instanceof InequalityConstraint) {
+                encodeSoftInequalityConstraint((InequalityConstraint) constraint);
+            }
+            // Generate soft constraint for implication constraint
+            if (constraint instanceof ImplicationConstraint) {
+                encodeSoftImplicationConstraint((ImplicationConstraint) constraint);
+            }
+            // Generate soft constraint for existential constraint
+            if (constraint instanceof ExistentialConstraint) {
+                encodeSoftExistentialConstraint((ExistentialConstraint) constraint);
+            }
+            // Generate soft constraint for combine constraint
+            if (constraint instanceof CombineConstraint) {
+                encodeSoftCombineConstraint((CombineConstraint) constraint);
+            }
+            // Generate soft constraint for preference constraint
+            if (constraint instanceof PreferenceConstraint) {
+                encodeSoftPreferenceConstraint((PreferenceConstraint) constraint);
+            }
+        }
+    }
+
+    protected void encodeSoftSubtypeConstraint(SubtypeConstraint constraint) {}
+
+    protected void encodeSoftComparableConstraint(ComparableConstraint constraint) {}
+
+    protected void encodeSoftArithmeticConstraint(ArithmeticConstraint constraint) {}
+
+    protected void encodeSoftEqualityConstraint(EqualityConstraint constraint) {}
+
+    protected void encodeSoftInequalityConstraint(InequalityConstraint constraint) {}
+
+    protected void encodeSoftImplicationConstraint(ImplicationConstraint constraint) {}
+
+    protected void encodeSoftExistentialConstraint(ExistentialConstraint constraint) {}
+
+    protected void encodeSoftCombineConstraint(CombineConstraint constraint) {}
+
+    protected void encodeSoftPreferenceConstraint(PreferenceConstraint constraint) {}
+
+    protected void encodeSlotPreferenceConstraint(VariableSlot varSlot) {
+        // empty string means no optimization group
+        solver.AssertSoft(
+                formatTranslator.encodeSlotPreferenceConstraint(varSlot), 1, "");
+    }
+
+    protected void addSoftConstraint(Expr serializedConstraint, int weight) {
+        smtFileContents.append("(assert-soft " + serializedConstraint + " :weight " + weight + ")\n");
     }
 
     private List<String> runZ3Solver() {
