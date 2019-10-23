@@ -25,6 +25,7 @@ import com.sun.tools.javac.util.Pair;
 import checkers.inference.model.AnnotationLocation;
 import checkers.inference.model.ArithmeticVariableSlot;
 import checkers.inference.model.CombVariableSlot;
+import checkers.inference.model.ComparableVariableSlot;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.RefinementVariableSlot;
@@ -94,6 +95,14 @@ public class DefaultSlotManager implements SlotManager {
      * {@link ArithmeticVariableSlot}.
      */
     private final Map<AnnotationLocation, Integer> arithmeticSlotCache;
+    
+    /**
+     * A map of {@link AnnotationLocation} to {@link Integer} for caching
+     * {@link ComparableVariableSlot}s. The annotation location uniquely identifies an
+     * {@link ComparableVariableSlot}. The {@link Integer} is the Id of the corresponding
+     * {@link ComparableVariableSlot}.
+     */
+    private final Map<AnnotationLocation, Integer> comparableSlotCache;
 
     private final Set<Class<? extends Annotation>> realQualifiers;
     private final ProcessingEnvironment processingEnvironment;
@@ -117,6 +126,7 @@ public class DefaultSlotManager implements SlotManager {
         combSlotPairCache = new LinkedHashMap<>();
         lubSlotPairCache = new LinkedHashMap<>();
         arithmeticSlotCache = new LinkedHashMap<>();
+        comparableSlotCache = new LinkedHashMap<>();
 
         if (storeConstants) {
             Set<? extends AnnotationMirror> mirrors = InferenceMain.getInstance().getRealTypeFactory().getQualifierHierarchy().getTypeQualifiers();
@@ -394,6 +404,37 @@ public class DefaultSlotManager implements SlotManager {
             existentialSlotPairCache.put(pair, existentialVariableSlot.getId());
         }
         return existentialVariableSlot;
+    }
+    
+    @Override
+    public ComparableVariableSlot createComparableVariableSlot(AnnotationLocation location) {
+        if (location == null || location.getKind() == AnnotationLocation.Kind.MISSING) {
+            throw new BugInCF(
+                    "Cannot create an ComparableVariableSlot with a missing annotation location.");
+        }
+
+        // create the arithmetic var slot if it doesn't exist for the given location
+        if (!comparableSlotCache.containsKey(location)) {
+        	ComparableVariableSlot slot = new ComparableVariableSlot(location, nextId());
+            addToVariables(slot);
+            comparableSlotCache.put(location, slot.getId());
+            return slot;
+        }
+
+        return getComparableVariableSlot(location);
+    }
+
+    @Override
+    public ComparableVariableSlot getComparableVariableSlot(AnnotationLocation location) {
+        if (location == null || location.getKind() == AnnotationLocation.Kind.MISSING) {
+            throw new BugInCF(
+                    "ComparableVariableSlot are never created with a missing annotation location.");
+        }
+        if (!comparableSlotCache.containsKey(location)) {
+            return null;
+        } else {
+            return (ComparableVariableSlot) getVariable(comparableSlotCache.get(location));
+        }
     }
 
     @Override

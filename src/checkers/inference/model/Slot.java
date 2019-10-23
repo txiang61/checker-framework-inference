@@ -50,6 +50,7 @@ public abstract class Slot {
         EXISTENTIAL_VARIABLE,
         COMB_VARIABLE,
         ARITHMETIC_VARIABLE,
+        COMPARABLE_VARIABLE,
         LUB_VARIABLE
     }
 
