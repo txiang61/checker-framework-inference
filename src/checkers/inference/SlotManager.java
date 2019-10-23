@@ -10,6 +10,7 @@ import javax.lang.model.element.AnnotationMirror;
 import checkers.inference.model.AnnotationLocation;
 import checkers.inference.model.ArithmeticVariableSlot;
 import checkers.inference.model.CombVariableSlot;
+import checkers.inference.model.ComparableVariableSlot;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.RefinementVariableSlot;
@@ -141,6 +142,29 @@ public interface SlotManager {
      * @return the ArithmeticVariableSlot for the given location, or null if none exists
      */
     ArithmeticVariableSlot getArithmeticVariableSlot(AnnotationLocation location);
+    
+    /**
+     * Create new ComparableVariableSlot at the given location and return a reference to it if no
+     * ComparableVariableSlots exists for the location. Otherwise, returns the existing
+     * ComparableVariableSlot.
+     *
+     * @param location an AnnotationLocation used to locate this variable in code
+     * @return the ComparableVariableSlot for the given location
+     */
+    ComparableVariableSlot createComparableVariableSlot(AnnotationLocation location);
+
+    /**
+     * Retrieves the ComparableVariableSlot created for the given location if it has been previously
+     * created, otherwise null is returned.
+     *
+     * This method allows faster retrieval of already created ComparableVariableSlot during
+     * traversals of binary trees in an InferenceVisitor subclass, which does not have direct access
+     * to the ATM containing this slot.
+     *
+     * @param location an AnnotationLocation used to locate this variable in code
+     * @return the ComparableVariableSlot for the given location, or null if none exists
+     */
+    ComparableVariableSlot getComparableVariableSlot(AnnotationLocation location);
 
     /**
      * Create a VarAnnot equivalent to the given realQualifier.
