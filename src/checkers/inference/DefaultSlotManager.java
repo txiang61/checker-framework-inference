@@ -17,6 +17,7 @@ import java.util.TreeSet;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.AnnotationValue;
+import javax.lang.model.type.TypeMirror;
 
 import checkers.inference.model.LubVariableSlot;
 
@@ -300,17 +301,17 @@ public class DefaultSlotManager implements SlotManager {
     }
 
     @Override
-    public VariableSlot createVariableSlot(AnnotationLocation location) {
+    public VariableSlot createVariableSlot(AnnotationLocation location, TypeMirror type) {
         VariableSlot variableSlot;
         if (location.getKind() == AnnotationLocation.Kind.MISSING) {
             //Don't cache slot for MISSING LOCATION. Just create a new one and return.
-            variableSlot = new VariableSlot(location, nextId());
+            variableSlot = new VariableSlot(location, nextId(), type);
             addToVariables(variableSlot);
         } else if (locationCache.containsKey(location)) {
             int id = locationCache.get(location);
             variableSlot = getVariable(id);
         } else {
-            variableSlot = new VariableSlot(location, nextId());
+            variableSlot = new VariableSlot(location, nextId(), type);
             addToVariables(variableSlot);
             locationCache.put(location, variableSlot.getId());
         }
