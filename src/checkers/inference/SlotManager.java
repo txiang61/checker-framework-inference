@@ -6,6 +6,7 @@ import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import java.util.List;
 
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.type.TypeMirror;
 
 import checkers.inference.model.AnnotationLocation;
 import checkers.inference.model.ArithmeticVariableSlot;
@@ -41,7 +42,7 @@ public interface SlotManager {
      *            used to locate this variable in code
      * @return VariableSlot that corresponds to this location
      */
-    VariableSlot createVariableSlot(AnnotationLocation location);
+    VariableSlot createVariableSlot(AnnotationLocation location, TypeMirror type);
 
     /**
      * Create new RefinementVariableSlot and return the reference to it if no
