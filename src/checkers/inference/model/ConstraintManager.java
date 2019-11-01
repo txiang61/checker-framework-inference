@@ -125,8 +125,8 @@ public class ConstraintManager {
      * {@link AlwaysTrueConstraint} or {@link AlwaysFalseConstraint}.
      */
     public Constraint createComparableConstraint(ComparableOperationKind operation, Slot first, 
-    		Slot second, ComparableVariableSlot result) {
-        return ComparableConstraint.create(operation, first, second, result, getCurrentLocation(), realQualHierarchy);
+    		Slot second) {
+        return ComparableConstraint.create(operation, first, second, getCurrentLocation(), realQualHierarchy);
     }
 
     /**
@@ -263,9 +263,8 @@ public class ConstraintManager {
     /**
      * Creates and adds a {@link ComparableConstraint} between the two slots to the constraint set.
      */
-    public void addComparableConstraint(ComparableOperationKind operation, Slot first, Slot second, 
-    		ComparableVariableSlot result) {
-        add(createComparableConstraint(operation, first, second, result));
+    public void addComparableConstraint(ComparableOperationKind operation, Slot first, Slot second) {
+        add(createComparableConstraint(operation, first, second));
     }
 
     /**

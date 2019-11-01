@@ -7,8 +7,6 @@ import org.checkerframework.javacutil.BugInCF;
 
 import com.sun.source.tree.Tree.Kind;
 
-import checkers.inference.model.ArithmeticConstraint.ArithmeticOperationKind;
-
 /**
  * Represents a constraint that two slots must be comparable.
  *
@@ -18,7 +16,6 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
     private final ComparableOperationKind operation;
     private final Slot first;
     private final Slot second;
-    private final ComparableVariableSlot result;
     
     public enum ComparableOperationKind {
     	EQUAL_TO("=="),
@@ -65,7 +62,6 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         this.first = first;
         this.second = second;
         this.operation = null;
-        this.result = null;
     }
     
     private ComparableConstraint(Slot first, Slot second) {
@@ -73,25 +69,20 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         this.first = first;
         this.second = second;
         this.operation = null;
-        this.result = null;
     }
 
-    private ComparableConstraint(ComparableOperationKind operation, Slot first, Slot second, 
-    		ComparableVariableSlot result, AnnotationLocation location) {
+    private ComparableConstraint(ComparableOperationKind operation, Slot first, Slot second, AnnotationLocation location) {
         super(Arrays.asList(first, second), location);
         this.first = first;
         this.second = second;
         this.operation = operation;
-        this.result = result;
     }
 
-    private ComparableConstraint(ComparableOperationKind operation, Slot first, Slot second, 
-    		ComparableVariableSlot result) {
+    private ComparableConstraint(ComparableOperationKind operation, Slot first, Slot second) {
         super(Arrays.asList(first, second));
         this.first = first;
         this.second = second;
         this.operation = operation;
-        this.result = result;
     }
 
     protected static Constraint create(Slot first, Slot second, AnnotationLocation location,
@@ -126,12 +117,11 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         return new ComparableConstraint(first, second, location);
     }
     
-    protected static Constraint create(ComparableOperationKind operation, Slot first, Slot second, 
-    		ComparableVariableSlot result, AnnotationLocation location, QualifierHierarchy realQualHierarchy) {
-        if (operation == null || first == null || second == null || result == null) {
+    protected static Constraint create(ComparableOperationKind operation, Slot first, Slot second, AnnotationLocation location, QualifierHierarchy realQualHierarchy) {
+        if (operation == null || first == null || second == null) {
             throw new BugInCF("Create comparable constraint with null argument. "
                     + "Operation: " + operation + " Subtype: "
-                    + first + " Supertype: " + second + " Result: " + result);
+                    + first + " Supertype: " + second);
         }
         if (location == null || location.getKind() == AnnotationLocation.Kind.MISSING) {
             throw new BugInCF(
@@ -139,7 +129,7 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         }
 
         // otherwise => CREATE_REAL_COMPARABLE_CONSTRAINT
-        return new ComparableConstraint(operation, first, second, result, location);
+        return new ComparableConstraint(operation, first, second, location);
     }
 
     @Override
@@ -161,10 +151,6 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         return second;
     }
 
-    public ComparableVariableSlot getResult() {
-        return result;
-    }
-
     @Override
     public Constraint make(Slot first, Slot second) {
         return new ComparableConstraint(first, second);
@@ -176,7 +162,6 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         code = code + ((first == null) ? 0 : first.hashCode());
         code = code + ((second == null) ? 0 : second.hashCode());
         code = code + ((operation == null) ? 0 : operation.hashCode());
-        code = code + ((result == null) ? 0 : result.hashCode());
         return code;
     }
 
