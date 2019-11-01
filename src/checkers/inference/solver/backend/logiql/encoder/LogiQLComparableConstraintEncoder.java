@@ -1,7 +1,6 @@
 package checkers.inference.solver.backend.logiql.encoder;
 
 import checkers.inference.model.ComparableConstraint.ComparableOperationKind;
-import checkers.inference.model.ComparableVariableSlot;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.VariableSlot;
 import checkers.inference.solver.backend.encoder.binary.ComparableConstraintEncoder;
@@ -36,16 +35,14 @@ public class LogiQLComparableConstraintEncoder extends LogiQLAbstractConstraintE
     }
 
 	@Override
-	public String encodeVariable_Variable(ComparableOperationKind operation, VariableSlot fst, VariableSlot snd,
-			ComparableVariableSlot result) {
+	public String encodeVariable_Variable(ComparableOperationKind operation, VariableSlot fst, VariableSlot snd) {
 		String logiQLData = "+comparableConstraint(v1, v2), +variable(v1), +hasvariableName[v1] = "
                 + fst.getId() + ", +variable(v2), +hasvariableName[v2] = " + snd.getId() + ".\n";
         return logiQLData;
 	}
 
 	@Override
-	public String encodeVariable_Constant(ComparableOperationKind operation, VariableSlot fst, ConstantSlot snd,
-			ComparableVariableSlot result) {
+	public String encodeVariable_Constant(ComparableOperationKind operation, VariableSlot fst, ConstantSlot snd) {
 		String constantName = NameUtils.getSimpleName(snd.getValue());
         int variableId = fst.getId();
         String logiQLData = "+comparableConstraint(v, c), +variable(v), +hasvariableName[v] = \""
@@ -54,8 +51,7 @@ public class LogiQLComparableConstraintEncoder extends LogiQLAbstractConstraintE
 	}
 
 	@Override
-	public String encodeConstant_Variable(ComparableOperationKind operation, ConstantSlot fst, VariableSlot snd,
-			ComparableVariableSlot result) {
+	public String encodeConstant_Variable(ComparableOperationKind operation, ConstantSlot fst, VariableSlot snd) {
 		String constantName = NameUtils.getSimpleName(fst.getValue());
         int variableId = snd.getId();
         String logiQLData = "+comparableConstraint(c, v), +constant(c), +hasconstantName[c] = \""
@@ -64,8 +60,7 @@ public class LogiQLComparableConstraintEncoder extends LogiQLAbstractConstraintE
 	}
 
 	@Override
-	public String encodeConstant_Constant(ComparableOperationKind operation, ConstantSlot fst, ConstantSlot snd,
-			ComparableVariableSlot result) {
+	public String encodeConstant_Constant(ComparableOperationKind operation, ConstantSlot fst, ConstantSlot snd) {
 		String constantNamefst = NameUtils.getSimpleName(fst.getValue());
 		String constantNamesnd = NameUtils.getSimpleName(snd.getValue());
         String logiQLData = "+comparableConstraint(c1, c2), +constant(c1), +hasconstantName[c1] = \""
