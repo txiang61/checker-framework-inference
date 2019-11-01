@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.lang.model.type.TypeMirror;
+
 /**
  * VariableSlot is a Slot representing an undetermined value (i.e. a variable we are solving for).
  * After the Solver is run, each VariableSlot should have an assigned value which is then written
@@ -36,6 +38,9 @@ public class VariableSlot extends Slot implements Comparable<VariableSlot>{
      */
     private boolean insertable = true;
 
+    /** Actual type wrapped with this TypeMirror. */
+    protected final TypeMirror actualType;
+
     /**
      * @param location Used to locate this variable in code, see @AnnotationLocation
      * @param id      Unique identifier for this variable
@@ -43,7 +48,20 @@ public class VariableSlot extends Slot implements Comparable<VariableSlot>{
     public VariableSlot(AnnotationLocation location, int id) {
         super(location);
         this.id = id;
+        this.actualType = null;
     }
+
+    /**
+     * @param location Used to locate this variable in code, see @AnnotationLocation
+     * @param id      Unique identifier for this variable
+     * @param type the underlying type
+     */
+    public VariableSlot(AnnotationLocation location, int id, TypeMirror type) {
+        super(location);
+        this.id = id;
+        this.actualType = type;
+    }
+
 
     // Slots this variable has been merged to.
     private final Set<LubVariableSlot> mergedToSlots = new HashSet<>();
@@ -74,12 +92,27 @@ public class VariableSlot extends Slot implements Comparable<VariableSlot>{
         return false;
     }
 
+    /**
+     * Returns the underlying unannotated Java type, which this wraps.
+     *
+     * @return the underlying type
+     */
+    public TypeMirror getUnderlyingType() {
+        return actualType;
+    }
+
     public int getId() {
         return id;
     }
 
     public VariableSlot(int id) {
         this.id = id;
+        this.actualType = null;
+    }
+
+    public VariableSlot(int id, TypeMirror type) {
+        this.id = id;
+        this.actualType = type;
     }
 
     public Set<LubVariableSlot> getMergedToSlots() {

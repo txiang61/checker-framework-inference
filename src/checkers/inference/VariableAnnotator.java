@@ -37,6 +37,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.TypeParameterElement;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 
 import com.sun.source.tree.AnnotatedTypeTree;
 import com.sun.source.tree.ArrayTypeTree;
@@ -195,6 +196,10 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
         return treeToLocation(inferenceTypeFactory, tree);
     }
 
+    protected TypeMirror treeToType(Tree tree) {
+        return InferenceMain.getInstance().getRealTypeFactory().getAnnotatedType(tree).getUnderlyingType();
+    }
+
     /**
      * For each method call that uses a method with a polymorphic qualifier, we replace all uses of that polymorphic
      * qualifier with a Variable.  Sometimes we might have to later retrieve that qualifier for a given invocation
@@ -205,7 +210,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
     public VariableSlot getOrCreatePolyVar(Tree tree) {
         VariableSlot polyVar = treeToPolyVar.get(tree);
         if (polyVar == null) {
-            polyVar = slotManager.createVariableSlot(treeToLocation(tree));
+            polyVar = slotManager.createVariableSlot(treeToLocation(tree), treeToType(tree));
             treeToPolyVar.put(tree, polyVar);
         }
 
@@ -224,7 +229,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
      * @return A new VariableSlot corresponding to tree
      */
     private VariableSlot createVariable(final Tree tree) {
-        final VariableSlot varSlot = createVariable(treeToLocation(tree));
+        final VariableSlot varSlot = createVariable(treeToLocation(tree), treeToType(tree));
 
 //        if (path != null) {
 //            Element element = inferenceTypeFactory.getTreeUtils().getElement(path);
@@ -251,9 +256,9 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
      *                actual implied tree appended to it.
      * @return A new VariableSlot corresponding to tree
      */
-    private VariableSlot createVariable(final AnnotationLocation location) {
+    private VariableSlot createVariable(final AnnotationLocation location, TypeMirror type) {
         final VariableSlot variableSlot = slotManager
-                .createVariableSlot(location);
+                .createVariableSlot(location, type);
         return variableSlot;
     }
 
@@ -528,7 +533,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
      * the type.
      */
     public VariableSlot addImpliedPrimaryVariable(AnnotatedTypeMirror atm, final AnnotationLocation location) {
-        VariableSlot variable = slotManager.createVariableSlot(location);
+        VariableSlot variable = slotManager.createVariableSlot(location, atm.getUnderlyingType());
         atm.addAnnotation(slotManager.getAnnotation(variable));
 
         AnnotationMirror realAnno = atm.getAnnotationInHierarchy(realTop);
@@ -564,7 +569,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
             realQualifier = realTypeFactory.getAnnotatedType(tree).getAnnotationInHierarchy(realTop);
             varSlot = slotManager.createConstantSlot(realQualifier);
         } else {
-            varSlot = createVariable(location);
+            varSlot = createVariable(location, atm.getUnderlyingType());
         }
 
         atm.replaceAnnotation(slotManager.getAnnotation(varSlot));
@@ -757,7 +762,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
             if (!extendsMissingTrees.containsKey(classElement)) {
                 // TODO: SEE COMMENT ON createImpliedExtendsLocation
                 AnnotationLocation location = createImpliedExtendsLocation(classTree);
-                extendsSlot = createVariable(location);
+                extendsSlot = createVariable(location, classType.getUnderlyingType());
                 extendsMissingTrees.put(classElement, extendsSlot);
                 logger.fine("Created variable for implicit extends on class:\n" +
                         extendsSlot.getId() + " => " + classElement + " (extends Object)");
@@ -1211,7 +1216,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
                 final VariableSlot extendsSlot;
                 if (!extendsMissingTrees.containsKey(typeVarElement)) {
                     AnnotationLocation location = createImpliedExtendsLocation(typeParameterTree);
-                    extendsSlot = createVariable(location);
+                    extendsSlot = createVariable(location, typeVar.getUnderlyingType());
                     extendsMissingTrees.put(typeVarElement, extendsSlot);
                     logger.fine("Created variable for implicit extends on type parameter:\n" +
                             extendsSlot.getId() + " => " + typeVarElement + " (extends Object)");
