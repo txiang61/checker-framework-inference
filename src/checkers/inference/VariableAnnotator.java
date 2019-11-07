@@ -1545,8 +1545,9 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
     }
 
     /**
-     * Annotate a UnaryTree by creating and storing the LUB of the elements.
-     * @param atm the type of the binary tree to annotate
+     * Annotate a UnaryTree.
+     * This function is only visited after calling variableAnnotator.visit for UnaryTree in InferenceTreeAnnotator
+     * @param atm the type of the unary tree to annotate
      * @param unaryTree the unary tree
      */
     public void handleUnaryTree(AnnotatedTypeMirror atm, UnaryTree unaryTree) {
@@ -1566,7 +1567,8 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
 
     /**
      * Annotate a CompoundAssignmentTree by creating and storing the LUB of the elements.
-     * @param atm the type of the binary tree to annotate
+     * This function is only visited after calling variableAnnotator.visit for CompoundAssignmentTree in InferenceTreeAnnotator
+     * @param atm the type of the compound assignment tree to annotate
      * @param compoundTree the compound assignment tree
      */
     public void handleCompoundAssignmentTree(AnnotatedTypeMirror atm, CompoundAssignmentTree compoundTree) {
