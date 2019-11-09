@@ -13,6 +13,7 @@ import checkers.inference.model.InequalityConstraint;
 import checkers.inference.model.LubVariableSlot;
 import checkers.inference.model.PreferenceConstraint;
 import checkers.inference.model.RefinementVariableSlot;
+import checkers.inference.model.Slot;
 import checkers.inference.model.SubtypeConstraint;
 import checkers.inference.model.VariableSlot;
 import checkers.inference.solver.backend.encoder.ArithmeticConstraintEncoder;
@@ -205,6 +206,11 @@ public abstract class AbstractFormatTranslator<SlotEncodingT, ConstraintEncoding
     public ConstraintEncodingT serialize(ArithmeticConstraint constraint) {
         return arithmeticConstraintEncoder == null ? null :
             ConstraintEncoderCoordinator.dispatch(constraint, arithmeticConstraintEncoder);
+    }
+
+    @Override
+    public SlotEncodingT serialize(Slot slot) {
+        return null;
     }
 
     @Override

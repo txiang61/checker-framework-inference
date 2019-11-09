@@ -118,7 +118,7 @@ public interface SlotManager {
      * @return the ExistentialVariableSlot that wraps this potentialSlot and
      *         alternativeSlot
      */
-    ExistentialVariableSlot createExistentialVariableSlot(VariableSlot potentialSlot, VariableSlot alternativeSlot);
+    ExistentialVariableSlot createExistentialVariableSlot(Slot potentialSlot, Slot alternativeSlot);
 
     /**
      * Create new ArithmeticVariableSlot at the given location and return a reference to it if no
@@ -152,7 +152,7 @@ public interface SlotManager {
      AnnotationMirror createEquivalentVarAnno(final AnnotationMirror realQualifier);
 
     /** Return the variable identified by the given id or null if no such variable has been added */
-    VariableSlot getVariable( int id );
+    Slot getVariable( int id );
 
     /**
      * Given a slot return an annotation that represents the slot when added to an AnnotatedTypeMirror.

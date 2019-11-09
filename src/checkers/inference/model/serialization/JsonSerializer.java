@@ -213,13 +213,18 @@ public class JsonSerializer implements Serializer<String, JSONObject> {
     }
 
     @Override
-    public String serialize(VariableSlot slot) {
+    public String serialize(Slot slot) {
         return VAR_PREFIX + slot.getId();
     }
 
     @Override
+    public String serialize(VariableSlot slot) {
+        return serialize((Slot) slot);
+    }
+
+    @Override
     public String serialize(RefinementVariableSlot slot) {
-        return serialize((VariableSlot) slot);
+        return serialize((Slot) slot);
     }
 
     @Override
@@ -235,12 +240,12 @@ public class JsonSerializer implements Serializer<String, JSONObject> {
 
     @Override
     public String serialize(CombVariableSlot slot) {
-        return serialize((VariableSlot) slot);
+        return serialize((Slot) slot);
     }
 
     @Override
     public String serialize(LubVariableSlot slot) {
-        return serialize((VariableSlot) slot);
+        return serialize((Slot) slot);
     }
 
     @SuppressWarnings("unchecked")

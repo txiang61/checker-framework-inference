@@ -66,7 +66,7 @@ public class InferenceTypeVariableSubstitutor extends TypeVariableSubstitutor {
                 // we remove it (because it's between the potential variable and the bounds) and replace it
                 // with one that is between the SAME potential variable but the argumenht instead
 
-                final VariableSlot potentialSlot = ((ExistentialVariableSlot) upperBoundSlot).getPotentialSlot();
+                final Slot potentialSlot = ((ExistentialVariableSlot) upperBoundSlot).getPotentialSlot();
 
                 if (argument.getKind() != TypeKind.TYPEVAR) {
                     final Slot altSlot = slotManager.getVariableSlot(argument);
