@@ -54,7 +54,7 @@ public class DefaultSlotManager implements SlotManager {
      * ConstantSlots are also stored in this map, since ConstantSlot is subclass
      * of VariableSlot.
      */
-    private final Map<Integer, VariableSlot> variables;
+    private final Map<Integer, Slot> variables;
 
     /**
      * A map of {@link AnnotationMirror} to {@link Integer} for caching
@@ -77,7 +77,7 @@ public class DefaultSlotManager implements SlotManager {
      * uniquely identified by its potential and alternative VariablesSlots.
      * {@link Integer} is the id of the corresponding ExistentialVariableSlot
      */
-    private final Map<Pair<VariableSlot, VariableSlot>, Integer> existentialSlotPairCache;
+    private final Map<Pair<Slot, Slot>, Integer> existentialSlotPairCache;
 
     /**
      * A map of {@link Pair} of {@link Slot} to {@link Integer} for caching
@@ -158,7 +158,7 @@ public class DefaultSlotManager implements SlotManager {
         return nextId++;
     }
 
-    private void addToVariables(final VariableSlot slot) {
+    private void addToVariables(final Slot slot) {
         variables.put(slot.getId(), slot);
     }
 
@@ -166,7 +166,7 @@ public class DefaultSlotManager implements SlotManager {
      * @inheritDoc
      */
     @Override
-    public VariableSlot getVariable( int id ) {
+    public Slot getVariable( int id ) {
         return variables.get(id);
     }
 
@@ -310,7 +310,7 @@ public class DefaultSlotManager implements SlotManager {
             addToVariables(variableSlot);
         } else if (locationCache.containsKey(location)) {
             int id = locationCache.get(location);
-            variableSlot = getVariable(id);
+            variableSlot = (VariableSlot) getVariable(id);
         } else {
             variableSlot = new VariableSlot(location, nextId(), type);
             addToVariables(variableSlot);
@@ -384,9 +384,9 @@ public class DefaultSlotManager implements SlotManager {
     }
 
     @Override
-    public ExistentialVariableSlot createExistentialVariableSlot(VariableSlot potentialSlot, VariableSlot alternativeSlot) {
+    public ExistentialVariableSlot createExistentialVariableSlot(Slot potentialSlot, Slot alternativeSlot) {
         ExistentialVariableSlot existentialVariableSlot;
-        Pair<VariableSlot, VariableSlot> pair = new Pair<>(potentialSlot, alternativeSlot);
+        Pair<Slot, Slot> pair = new Pair<>(potentialSlot, alternativeSlot);
         if (existentialSlotPairCache.containsKey(pair)) {
             int id = existentialSlotPairCache.get(pair);
             existentialVariableSlot = (ExistentialVariableSlot) getVariable(id);
