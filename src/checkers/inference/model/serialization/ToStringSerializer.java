@@ -303,6 +303,14 @@ public class ToStringSerializer implements Serializer<String, String> {
 
     // variables
     @Override
+    public String serialize(Slot slot) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(slot.getId());
+        optionallyShowVerbose(slot, sb);
+        return sb.toString();
+    }
+
+    @Override
     public String serialize(VariableSlot slot) {
         final StringBuilder sb = new StringBuilder();
         sb.append(slot.getId());
@@ -368,21 +376,21 @@ public class ToStringSerializer implements Serializer<String, String> {
         return indentStrings.get(indentationLevel);
     }
 
-    private void formatMerges(final VariableSlot slot, final StringBuilder sb) {
+    private void formatMerges(final Slot slot, final StringBuilder sb) {
         if (!slot.getMergedToSlots().isEmpty()) {
             sb.append(": merged to -> ")
               .append(slot.getMergedToSlots());
         }
     }
 
-    private void optionallyShowVerbose(final VariableSlot varSlot, final StringBuilder sb) {
+    private void optionallyShowVerbose(final Slot varSlot, final StringBuilder sb) {
         if (showVerboseVars) {
             formatMerges(varSlot, sb);
             optionallyFormatAstPath(varSlot, sb);
         }
     }
 
-    private void optionallyFormatAstPath(final VariableSlot varSlot, final StringBuilder sb) {
+    private void optionallyFormatAstPath(final Slot varSlot, final StringBuilder sb) {
         if (showAstPaths && (varSlot.isInsertable() || (varSlot.getLocation() != null))) {
             sb.append("\n")
               .append(getCurrentIndentString())
