@@ -255,7 +255,7 @@ public class InferenceVisitor<Checker extends InferenceChecker,
         if (infer) {
             ConstraintManager cManager = InferenceMain.getInstance().getConstraintManager();
             SlotManager sManager = InferenceMain.getInstance().getSlotManager();
-            VariableSlot vSlot = sManager.getVariableSlot(type);
+            Slot vSlot = sManager.getVariableSlot(type);
             ConstantSlot cSlot = InferenceMain.getInstance().getSlotManager().createConstantSlot(anno);
             cManager.addPreferenceConstraint(vSlot, cSlot, weight);
         }

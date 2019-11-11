@@ -4,6 +4,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.lang.model.type.TypeMirror;
+
 /**
  * Slots represent logical variables over which Constraints are generated.
  *

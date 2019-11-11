@@ -104,7 +104,7 @@ public class ExistentialVariableInserter {
      */
     public void insert(final Slot potentialVariable, final AnnotatedTypeMirror typeUse,
                        final AnnotatedTypeMirror declaration,  boolean mustExist) {
-        if (potentialVariable == null || !(potentialVariable instanceof VariableSlot)) {
+        if (potentialVariable == null) {
             throw new BugInCF("Bad type variable slot: slot=" + potentialVariable);
         }
 
@@ -151,10 +151,9 @@ public class ExistentialVariableInserter {
                     }
                 }
 
-                if (declSlot instanceof VariableSlot) {
-                    final VariableSlot varSlot = slotManager.getVariableSlot(declaration);
+                if (declSlot.isVariable()) {
                     final ExistentialVariableSlot existVar =
-                            varAnnotator.getOrCreateExistentialVariable(typeUse, potentialVariable, varSlot);
+                            varAnnotator.getOrCreateExistentialVariable(typeUse, potentialVariable, declSlot);
 
                 } else if (!InferenceMain.isHackMode()) {
                         throw new BugInCF("Unexpected constant slot in:" + declaration);
@@ -277,7 +276,7 @@ public class ExistentialVariableInserter {
                 return false;
             }
 
-            VariableSlot varSlot = slotManager.getVariableSlot(type);
+            Slot varSlot = slotManager.getVariableSlot(type);
             if (varSlot == null) {
                 return false;
             }
