@@ -203,7 +203,7 @@ public class InferenceTypeArgumentInference extends DefaultTypeArgumentInference
                 upperBoundVariable  = ((ExistentialVariableSlot) upperBoundVariable).getPotentialSlot();
             }
 
-            VariableSlot lowerBoundVariable = slotManager.getVariableSlot(lowerBound);
+            Slot lowerBoundVariable = slotManager.getVariableSlot(lowerBound);
 
             Slot newSlot = targetToPrimary.get(target);
             variableSlotReplacer.addReplacement(upperBoundVariable, newSlot);

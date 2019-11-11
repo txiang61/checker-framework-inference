@@ -233,7 +233,7 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         // generate slot constraints
         for (Slot slot : slots) {
             if (slot.isVariable()) {
-                VariableSlot varSlot = (VariableSlot) slot;
+                Slot varSlot = slot;
 
                 BoolExpr wfConstraint = formatTranslator.encodeSlotWellformnessConstraint(varSlot);
 
@@ -383,7 +383,7 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
 
     protected void encodeSoftPreferenceConstraint(PreferenceConstraint constraint) {}
 
-    protected void encodeSlotPreferenceConstraint(VariableSlot varSlot) {
+    protected void encodeSlotPreferenceConstraint(Slot varSlot) {
         // empty string means no optimization group
         solver.AssertSoft(
                 formatTranslator.encodeSlotPreferenceConstraint(varSlot), 1, "");

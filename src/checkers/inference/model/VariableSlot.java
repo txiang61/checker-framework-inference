@@ -29,15 +29,6 @@ public class VariableSlot extends Slot {
     /**
      * @param location Used to locate this variable in code, see @AnnotationLocation
      * @param id      Unique identifier for this variable
-     */
-    public VariableSlot(AnnotationLocation location, int id) {
-        super(id, location);
-        this.actualType = null;
-    }
-
-    /**
-     * @param location Used to locate this variable in code, see @AnnotationLocation
-     * @param id      Unique identifier for this variable
      * @param type the underlying type
      */
     public VariableSlot(AnnotationLocation location, int id, TypeMirror type) {
@@ -49,9 +40,9 @@ public class VariableSlot extends Slot {
      * @param location Used to locate this variable in code, see @AnnotationLocation
      * @param id      Unique identifier for this variable
      */
-    public VariableSlot(int id) {
+    public VariableSlot(int id, TypeMirror type) {
         super(id);
-        this.actualType = null;
+        this.actualType = type;
     }
 
     @Override

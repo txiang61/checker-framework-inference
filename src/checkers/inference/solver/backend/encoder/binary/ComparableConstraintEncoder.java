@@ -2,6 +2,7 @@ package checkers.inference.solver.backend.encoder.binary;
 
 import checkers.inference.model.ComparableConstraint.ComparableOperationKind;
 import checkers.inference.model.ConstantSlot;
+import checkers.inference.model.Slot;
 import checkers.inference.model.VariableSlot;
 import checkers.inference.solver.backend.encoder.AbstractConstraintEncoderFactory;
 
@@ -15,13 +16,13 @@ import checkers.inference.solver.backend.encoder.AbstractConstraintEncoderFactor
  */
 public interface ComparableConstraintEncoder<ConstraintEncodingT> extends BinaryConstraintEncoder<ConstraintEncodingT> {
 	ConstraintEncodingT encodeVariable_Variable(ComparableOperationKind operation,
-            VariableSlot fst, VariableSlot snd);
+            Slot fst, Slot snd);
 
     ConstraintEncodingT encodeVariable_Constant(ComparableOperationKind operation,
-            VariableSlot fst, ConstantSlot snd);
+            Slot fst, ConstantSlot snd);
 
     ConstraintEncodingT encodeConstant_Variable(ComparableOperationKind operation,
-            ConstantSlot fst, VariableSlot snd);
+            ConstantSlot fst, Slot snd);
 
     ConstraintEncodingT encodeConstant_Constant(ComparableOperationKind operation,
             ConstantSlot fst, ConstantSlot snd);

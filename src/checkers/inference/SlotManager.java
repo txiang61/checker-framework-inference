@@ -179,7 +179,7 @@ public interface SlotManager {
      * there is no VariableSlot this method throws an exception
      * @param atm An annotated type mirror with a VarAnnot in its primary annotations list
      */
-    VariableSlot getVariableSlot(AnnotatedTypeMirror atm);
+    Slot getVariableSlot(AnnotatedTypeMirror atm);
 
     /**
      * Return all slots collected by this SlotManager
@@ -191,7 +191,7 @@ public interface SlotManager {
      * Return all VariableSlots collected by this SlotManager
      * @return a lit of VariableSlots
      */
-    List<VariableSlot> getVariableSlots();
+    List<Slot> getVariableSlots();
 
     List<ConstantSlot> getConstantSlots();
 }

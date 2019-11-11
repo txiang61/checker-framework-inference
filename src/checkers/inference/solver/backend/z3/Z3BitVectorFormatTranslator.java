@@ -120,7 +120,12 @@ public abstract class Z3BitVectorFormatTranslator extends AbstractFormatTranslat
     protected ConstraintEncoderFactory<BoolExpr> createConstraintEncoderFactory() {
         return new Z3BitVectorConstraintEncoderFactory(lattice, context, this);
     }
-
+    
+    @Override
+    public BitVecExpr serialize(Slot slot) {
+        return serializeVarSlot(slot);
+    }
+    
     @Override
     public BitVecExpr serialize(VariableSlot slot) {
         return serializeVarSlot(slot);

@@ -115,7 +115,7 @@ public class JsonDeserializer {
                             jsonArrayToConstraints((JSONArray) constraint.get(EXISTENTIAL_THEN));
                     List<Constraint> elseConstraints =
                             jsonArrayToConstraints((JSONArray) constraint.get(EXISTENTIAL_ELSE));
-                    results.add(constraintManager.createExistentialConstraint((VariableSlot) potential,
+                    results.add(constraintManager.createExistentialConstraint(potential,
                             thenConstraints, elseConstraints));
                 }  else {
                     throw new IllegalArgumentException("Parse error: unknown constraint type: " + obj);
@@ -142,7 +142,7 @@ public class JsonDeserializer {
 
                 String constraintType = (String) constraint.get(CONSTRAINT_KEY);
                 if (constraintType.equals(EXISTENTIAL_CONSTRAINT_KEY)) {
-                    VariableSlot potential = (VariableSlot) parseSlot((String) constraint.get(EXISTENTIAL_ID));
+                    Slot potential = parseSlot((String) constraint.get(EXISTENTIAL_ID));
                     potentialVariableIds.add(String.valueOf(potential.getId()));
 
                     Object thenConstraints = constraint.get(EXISTENTIAL_THEN);
@@ -204,7 +204,7 @@ public class JsonDeserializer {
     private Slot parseSlot(String slot) {
         if (slot.startsWith(VAR_PREFIX)) {
             int id = new Integer(slot.split(":")[1]);
-            return new VariableSlot(id);
+            return new VariableSlot(id, null);
         } else {
             // TODO: THIS NEEDS FIXING
             AnnotationMirror value = annotationSerializer.deserialize(slot);

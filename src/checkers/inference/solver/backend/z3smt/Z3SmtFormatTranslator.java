@@ -82,9 +82,9 @@ public abstract class Z3SmtFormatTranslator<SlotEncodingT, SlotSolutionT>
      */
     public void preAnalyzeSlots(Collection<Slot> slots) {}
 
-    public abstract BoolExpr encodeSlotWellformnessConstraint(VariableSlot slot);
+    public abstract BoolExpr encodeSlotWellformnessConstraint(Slot slot);
 
-    public abstract BoolExpr encodeSlotPreferenceConstraint(VariableSlot slot);
+    public abstract BoolExpr encodeSlotPreferenceConstraint(Slot slot);
 
     public abstract Map<Integer, AnnotationMirror> decodeSolution(
             List<String> model, ProcessingEnvironment processingEnv);

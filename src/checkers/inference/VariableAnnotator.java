@@ -297,7 +297,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
      */
     ExistentialVariableSlot getOrCreateExistentialVariable(final AnnotatedTypeMirror atm,
                                                            final Slot potentialVariable,
-                                                           final VariableSlot alternativeSlot) {
+                                                           final Slot alternativeSlot) {
         ExistentialVariableSlot existentialVariable = getOrCreateExistentialVariable(potentialVariable, alternativeSlot);
         atm.replaceAnnotation(slotManager.getAnnotation(existentialVariable));
         return existentialVariable;
