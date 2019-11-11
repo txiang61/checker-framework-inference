@@ -283,8 +283,8 @@ public class InferenceQualifierHierarchy extends MultiGraphQualifierHierarchy {
                 Slot constantSlot = slotMgr.createConstantSlot(realLub);
                 return slotMgr.getAnnotation(constantSlot);
             } else {
-                VariableSlot var1 = (VariableSlot) slot1;
-                VariableSlot var2 = (VariableSlot) slot2;
+                Slot var1 = slot1;
+                Slot var2 = slot2;
 
                 if (var1 == var2) {
                     // They are the same slot.

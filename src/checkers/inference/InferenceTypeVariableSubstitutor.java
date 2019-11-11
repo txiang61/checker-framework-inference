@@ -71,7 +71,7 @@ public class InferenceTypeVariableSubstitutor extends TypeVariableSubstitutor {
                 if (argument.getKind() != TypeKind.TYPEVAR) {
                     final Slot altSlot = slotManager.getVariableSlot(argument);
 
-                    final VariableSlot alternative = (VariableSlot) altSlot;
+                    final Slot alternative = altSlot;
                     if (alternative != null) {
                         final ExistentialVariableSlot slot = slotManager.createExistentialVariableSlot(potentialSlot, alternative);
                         argument.replaceAnnotation(slotManager.getAnnotation(slot));

@@ -50,9 +50,9 @@ public class DefaultSlotManager implements SlotManager {
     /**
      * A map for storing all the slots encountered by this slot manager. Key is
      * an {@link Integer}, representing a slot id. Value is a
-     * {@link VariableSlot} that corresponds to this slot id. Note that
+     * {@link Slot} that corresponds to this slot id. Note that
      * ConstantSlots are also stored in this map, since ConstantSlot is subclass
-     * of VariableSlot.
+     * of Slot.
      */
     private final Map<Integer, Slot> variables;
 
@@ -72,7 +72,7 @@ public class DefaultSlotManager implements SlotManager {
     private final Map<AnnotationLocation, Integer> locationCache;
 
     /**
-     * A map of {@link Pair} of {@link VariableSlot} to {@link Integer} for
+     * A map of {@link Pair} of {@link Slot} to {@link Integer} for
      * caching ExistentialVariableSlot. Each ExistentialVariableSlot can be
      * uniquely identified by its potential and alternative VariablesSlots.
      * {@link Integer} is the id of the corresponding ExistentialVariableSlot
@@ -175,16 +175,10 @@ public class DefaultSlotManager implements SlotManager {
      */
     @Override
     public AnnotationMirror getAnnotation(final Slot slot) {
-        // if slot is a VariableSlot or one of its subclasses
-        if (slot instanceof VariableSlot) {
-            // We need to build the AnnotationBuilder each time because AnnotationBuilders are only
-            // allowed to build their annotations once
-            return convertVariable((VariableSlot) slot,
-                    new AnnotationBuilder(processingEnvironment, VarAnnot.class));
-        }
-
-        throw new IllegalArgumentException(
-                "Slot type unrecognized( " + slot.getClass() + ") Slot=" + slot.toString());
+        // We need to build the AnnotationBuilder each time because AnnotationBuilders are only
+        // allowed to build their annotations once
+        return convertVariable(slot,
+                new AnnotationBuilder(processingEnvironment, VarAnnot.class));
     }
 
     /**
@@ -195,7 +189,7 @@ public class DefaultSlotManager implements SlotManager {
      *                          build @CombVarAnnots
      * @return An annotation representing variable
      */
-    private AnnotationMirror convertVariable( final VariableSlot variable, final AnnotationBuilder annotationBuilder) {
+    private AnnotationMirror convertVariable( final Slot variable, final AnnotationBuilder annotationBuilder) {
         annotationBuilder.setValue("value", variable.getId() );
         return annotationBuilder.build();
     }
@@ -205,7 +199,7 @@ public class DefaultSlotManager implements SlotManager {
      * @inheritDoc
      */
     @Override
-    public VariableSlot getVariableSlot( final AnnotatedTypeMirror atm ) {
+    public Slot getVariableSlot( final AnnotatedTypeMirror atm ) {
 
         AnnotationMirror annot = atm.getAnnotationInHierarchy(this.varAnnot);
         if (annot == null) {
@@ -216,7 +210,7 @@ public class DefaultSlotManager implements SlotManager {
             throw new BugInCF("Missing VarAnnot annotation: " + atm);
         }
 
-        return (VariableSlot) getSlot(annot);
+        return getSlot(annot);
     }
 
     /**
@@ -272,11 +266,11 @@ public class DefaultSlotManager implements SlotManager {
      * @inheritDoc
      */
     @Override
-    public List<VariableSlot> getVariableSlots() {
-        List<VariableSlot> varSlots = new ArrayList<>();
+    public List<Slot> getVariableSlots() {
+        List<Slot> varSlots = new ArrayList<>();
         for (Slot slot : variables.values()) {
             if (slot.isVariable()) {
-                varSlots.add((VariableSlot) slot);
+                varSlots.add(slot);
             }
         }
         return varSlots;

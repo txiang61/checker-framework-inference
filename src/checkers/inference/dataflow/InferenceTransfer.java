@@ -217,7 +217,7 @@ public class InferenceTransfer extends CFTransfer {
             // Fields from library methods can be refined, but the slotToRefine is a ConstantSlot
             // which does not have a refined slots field.
             if (slotToRefine.isVariable()) {
-                ((VariableSlot) slotToRefine).getRefinedToSlots().add(refVar);
+                slotToRefine.getRefinedToSlots().add(refVar);
             }
 
             createdRefinementVariables.put(assignmentTree, refVar);

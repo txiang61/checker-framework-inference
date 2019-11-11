@@ -129,7 +129,7 @@ public class ConstraintManager {
     /**
      * Creates a {@link PreferenceConstraint} for the given slots with the given weight.
      */
-    public PreferenceConstraint createPreferenceConstraint(VariableSlot variable, ConstantSlot goal,
+    public PreferenceConstraint createPreferenceConstraint(Slot variable, ConstantSlot goal,
             int weight) {
         return PreferenceConstraint.create(variable, goal, weight, getCurrentLocation());
     }
@@ -139,7 +139,7 @@ public class ConstraintManager {
      */
     public ExistentialConstraint createExistentialConstraint(Slot slot,
             List<Constraint> ifExistsConstraints, List<Constraint> ifNotExistsConstraints) {
-        return ExistentialConstraint.create((VariableSlot) slot, ifExistsConstraints,
+        return ExistentialConstraint.create(slot, ifExistsConstraints,
                 ifNotExistsConstraints, getCurrentLocation());
     }
 
@@ -260,7 +260,7 @@ public class ConstraintManager {
     /**
      * Creates and adds a {@link PreferenceConstraint} to the constraint set.
      */
-    public void addPreferenceConstraint(VariableSlot variable, ConstantSlot goal, int weight) {
+    public void addPreferenceConstraint(Slot variable, ConstantSlot goal, int weight) {
         add(createPreferenceConstraint(variable, goal, weight));
     }
 
