@@ -13,6 +13,7 @@ import org.checkerframework.framework.type.AnnotatedTypeFactory;
 
 import checkers.inference.InferenceMain;
 import checkers.inference.model.ArithmeticConstraint;
+import checkers.inference.model.ArithmeticVariableSlot;
 import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
@@ -289,12 +290,6 @@ public class PrintUtils {
         }
 
         @Override
-        public Void serialize(Slot slot) {
-            addSlotIfNotAdded(slot);
-            return null;
-        }
-
-        @Override
         public Void serialize(VariableSlot slot) {
             addSlotIfNotAdded(slot);
             return null;
@@ -327,6 +322,12 @@ public class PrintUtils {
         public Void serialize(LubVariableSlot slot) {
             slot.getLeft().serialize(this);
             slot.getRight().serialize(this);
+            addSlotIfNotAdded(slot);
+            return null;
+        }
+        
+        @Override
+        public Void serialize(ArithmeticVariableSlot slot) {
             addSlotIfNotAdded(slot);
             return null;
         }
