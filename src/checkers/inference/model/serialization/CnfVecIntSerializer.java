@@ -11,6 +11,7 @@ import org.sat4j.core.VecInt;
 
 import checkers.inference.SlotManager;
 import checkers.inference.model.ArithmeticConstraint;
+import checkers.inference.model.ArithmeticVariableSlot;
 import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
@@ -216,12 +217,6 @@ public abstract class CnfVecIntSerializer implements Serializer<VecInt[], VecInt
     }
 
     @Override
-    public VecInt[] serialize(Slot slot) {
-        // doesn't really mean anything
-        return null;
-    }
-
-    @Override
     public VecInt[] serialize(VariableSlot slot) {
         // doesn't really mean anything
         return null;
@@ -247,6 +242,12 @@ public abstract class CnfVecIntSerializer implements Serializer<VecInt[], VecInt
 
     @Override
     public VecInt[] serialize(LubVariableSlot slot) {
+        return null;
+    }
+    
+    @Override
+    public VecInt[] serialize(ArithmeticVariableSlot slot) {
+        // doesn't really mean anything
         return null;
     }
 
