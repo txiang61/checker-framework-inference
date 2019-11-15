@@ -69,6 +69,6 @@ public class VariableSlot extends Slot {
      */
     @Override
     public boolean isInsertable() {
-        return false;
+        return true;
     }
 }
