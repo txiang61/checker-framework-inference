@@ -198,7 +198,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
     }
 
     protected TypeMirror treeToType(Tree tree) {
-        return InferenceMain.getInstance().getRealTypeFactory().getAnnotatedType(tree).getUnderlyingType();
+        return TreeUtils.typeOf(tree);
     }
 
     /**
