@@ -18,6 +18,7 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
     private final Slot second;
     
     public enum ComparableOperationKind {
+    	ANY(""),
     	EQUAL_TO("=="),
     	NOT_EQUAL_TO("!="),
     	GREATER_THAN(">"),
@@ -56,22 +57,9 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
             return opSymbol;
         }
     }
-    
-    private ComparableConstraint(Slot first, Slot second, AnnotationLocation location) {
-        super(Arrays.asList(first, second), location);
-        this.first = first;
-        this.second = second;
-        this.operation = null;
-    }
-    
-    private ComparableConstraint(Slot first, Slot second) {
-        super(Arrays.asList(first, second));
-        this.first = first;
-        this.second = second;
-        this.operation = null;
-    }
 
-    private ComparableConstraint(ComparableOperationKind operation, Slot first, Slot second, AnnotationLocation location) {
+    private ComparableConstraint(ComparableOperationKind operation, Slot first, Slot second,
+            AnnotationLocation location) {
         super(Arrays.asList(first, second), location);
         this.first = first;
         this.second = second;
@@ -84,11 +72,12 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         this.second = second;
         this.operation = operation;
     }
-
-    protected static Constraint create(Slot first, Slot second, AnnotationLocation location,
-            QualifierHierarchy realQualHierarchy) {
-        if (first == null || second == null) {
-            throw new BugInCF("Create comparable constraint with null argument. Subtype: "
+    
+    protected static Constraint create(ComparableOperationKind operation, Slot first, Slot second,
+    		AnnotationLocation location, QualifierHierarchy realQualHierarchy) {
+        if (operation == null || first == null || second == null) {
+            throw new BugInCF("Create comparable constraint with null argument. "
+                    + "Operation: " + operation + " Subtype: "
                     + first + " Supertype: " + second);
         }
 
@@ -98,7 +87,8 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         // otherwise => CREATE_REAL_COMPARABLE_CONSTRAINT
 
         // C1 <~> C2 => TRUE/FALSE depending on relationship
-        if (first instanceof ConstantSlot && second instanceof ConstantSlot) {
+        if (first instanceof ConstantSlot && second instanceof ConstantSlot 
+        		&& operation == ComparableOperationKind.ANY) {
             ConstantSlot firstConst = (ConstantSlot) first;
             ConstantSlot secondConst = (ConstantSlot) second;
 
@@ -107,25 +97,10 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
                             ? AlwaysTrueConstraint.create()
                             : AlwaysFalseConstraint.create();
         }
-
+        
         // V <~> V => TRUE (every type is always comparable to itself)
         if (first == second) {
             return AlwaysTrueConstraint.create();
-        }
-
-        // otherwise => CREATE_REAL_COMPARABLE_CONSTRAINT
-        return new ComparableConstraint(first, second, location);
-    }
-    
-    protected static Constraint create(ComparableOperationKind operation, Slot first, Slot second, AnnotationLocation location, QualifierHierarchy realQualHierarchy) {
-        if (operation == null || first == null || second == null) {
-            throw new BugInCF("Create comparable constraint with null argument. "
-                    + "Operation: " + operation + " Subtype: "
-                    + first + " Supertype: " + second);
-        }
-        if (location == null || location.getKind() == AnnotationLocation.Kind.MISSING) {
-            throw new BugInCF(
-                    "Cannot create an ArithmeticConstraint with a missing annotation location.");
         }
 
         // otherwise => CREATE_REAL_COMPARABLE_CONSTRAINT
@@ -153,7 +128,7 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
 
     @Override
     public Constraint make(Slot first, Slot second) {
-        return new ComparableConstraint(first, second);
+        return new ComparableConstraint(ComparableOperationKind.ANY, first, second);
     }
 
     @Override
@@ -174,8 +149,8 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         if (getClass() != obj.getClass())
             return false;
         ComparableConstraint other = (ComparableConstraint) obj;
-        if ((first.equals(other.first) && second.equals(other.second))
-                || (first.equals(other.second) && (second.equals(other.first)))) {
+        if (first.equals(other.first) && second.equals(other.second) 
+        		&& operation.equals(other.operation)) {
             return true;
         } else {
             return false;
