@@ -16,6 +16,7 @@ import checkers.inference.model.VariableSlot;
 import checkers.inference.model.serialization.ToStringSerializer;
 import checkers.inference.solver.backend.Solver;
 import checkers.inference.solver.backend.z3smt.Z3SmtFormatTranslator;
+import checkers.inference.solver.backend.z3smt.encoder.Z3SmtSoftConstraintEncoder;
 import checkers.inference.solver.frontend.Lattice;
 import checkers.inference.solver.util.ExternalSolverUtils;
 import checkers.inference.solver.util.FileUtils;
@@ -324,73 +325,15 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         smtFileContents.append(constraintSmt);
     }
 
-    private void encodeAllSoftConstraints() {
-        for (Constraint constraint : constraints) {
-            // Generate a soft constraint for subtype constraint
-            if (constraint instanceof SubtypeConstraint) {
-                encodeSoftSubtypeConstraint((SubtypeConstraint) constraint);
-            }
-            // Generate soft constraint for comparison constraint
-            if (constraint instanceof ComparableConstraint) {
-                encodeSoftComparableConstraint((ComparableConstraint) constraint);
-            }
-            // Generate soft constraint for arithmetic constraint
-            if (constraint instanceof ArithmeticConstraint) {
-                encodeSoftArithmeticConstraint((ArithmeticConstraint) constraint);
-            }
-            // Generate soft constraint for equality constraint
-            if (constraint instanceof EqualityConstraint) {
-                encodeSoftEqualityConstraint((EqualityConstraint) constraint);
-            }
-            // Generate soft constraint for inequality constraint
-            if (constraint instanceof InequalityConstraint) {
-                encodeSoftInequalityConstraint((InequalityConstraint) constraint);
-            }
-            // Generate soft constraint for implication constraint
-            if (constraint instanceof ImplicationConstraint) {
-                encodeSoftImplicationConstraint((ImplicationConstraint) constraint);
-            }
-            // Generate soft constraint for existential constraint
-            if (constraint instanceof ExistentialConstraint) {
-                encodeSoftExistentialConstraint((ExistentialConstraint) constraint);
-            }
-            // Generate soft constraint for combine constraint
-            if (constraint instanceof CombineConstraint) {
-                encodeSoftCombineConstraint((CombineConstraint) constraint);
-            }
-            // Generate soft constraint for preference constraint
-            if (constraint instanceof PreferenceConstraint) {
-                encodeSoftPreferenceConstraint((PreferenceConstraint) constraint);
-            }
-        }
+    protected void encodeAllSoftConstraints() {
+    	final Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT> encoder = formatTranslator.createSoftConstraintEncoder();
+        smtFileContents.append(encoder.encodeAndGetSoftConstraints(constraints));
     }
-
-    protected void encodeSoftSubtypeConstraint(SubtypeConstraint constraint) {}
-
-    protected void encodeSoftComparableConstraint(ComparableConstraint constraint) {}
-
-    protected void encodeSoftArithmeticConstraint(ArithmeticConstraint constraint) {}
-
-    protected void encodeSoftEqualityConstraint(EqualityConstraint constraint) {}
-
-    protected void encodeSoftInequalityConstraint(InequalityConstraint constraint) {}
-
-    protected void encodeSoftImplicationConstraint(ImplicationConstraint constraint) {}
-
-    protected void encodeSoftExistentialConstraint(ExistentialConstraint constraint) {}
-
-    protected void encodeSoftCombineConstraint(CombineConstraint constraint) {}
-
-    protected void encodeSoftPreferenceConstraint(PreferenceConstraint constraint) {}
 
     protected void encodeSlotPreferenceConstraint(VariableSlot varSlot) {
         // empty string means no optimization group
         solver.AssertSoft(
                 formatTranslator.encodeSlotPreferenceConstraint(varSlot), 1, "");
-    }
-
-    protected void addSoftConstraint(Expr serializedConstraint, int weight) {
-        smtFileContents.append("(assert-soft " + serializedConstraint + " :weight " + weight + ")\n");
     }
 
     private List<String> runZ3Solver() {

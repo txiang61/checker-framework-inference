@@ -8,9 +8,11 @@ import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Slot;
 import checkers.inference.model.VariableSlot;
 import checkers.inference.solver.backend.AbstractFormatTranslator;
+import checkers.inference.solver.backend.z3smt.encoder.Z3SmtSoftConstraintEncoder;
 import checkers.inference.solver.frontend.Lattice;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +82,8 @@ public abstract class Z3SmtFormatTranslator<SlotEncodingT, SlotSolutionT>
     public abstract BoolExpr encodeSlotWellformnessConstraint(VariableSlot slot);
 
     public abstract BoolExpr encodeSlotPreferenceConstraint(VariableSlot slot);
+    
+    protected abstract Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT> createSoftConstraintEncoder();
 
     public abstract Map<Integer, AnnotationMirror> decodeSolution(
             List<String> model, ProcessingEnvironment processingEnv);
