@@ -6,6 +6,7 @@ import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import java.util.List;
 
 import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.type.TypeMirror;
 
 import checkers.inference.model.AnnotationLocation;
 import checkers.inference.model.ArithmeticVariableSlot;
@@ -40,7 +41,7 @@ public interface SlotManager {
      *            used to locate this variable in code
      * @return VariableSlot that corresponds to this location
      */
-    VariableSlot createVariableSlot(AnnotationLocation location);
+    VariableSlot createVariableSlot(AnnotationLocation location, TypeMirror type);
 
     /**
      * Create new RefinementVariableSlot and return the reference to it if no
@@ -117,7 +118,7 @@ public interface SlotManager {
      * @return the ExistentialVariableSlot that wraps this potentialSlot and
      *         alternativeSlot
      */
-    ExistentialVariableSlot createExistentialVariableSlot(VariableSlot potentialSlot, VariableSlot alternativeSlot);
+    ExistentialVariableSlot createExistentialVariableSlot(Slot potentialSlot, Slot alternativeSlot);
 
     /**
      * Create new ArithmeticVariableSlot at the given location and return a reference to it if no
@@ -151,7 +152,7 @@ public interface SlotManager {
      AnnotationMirror createEquivalentVarAnno(final AnnotationMirror realQualifier);
 
     /** Return the variable identified by the given id or null if no such variable has been added */
-    VariableSlot getVariable( int id );
+    Slot getSlot( int id );
 
     /**
      * Given a slot return an annotation that represents the slot when added to an AnnotatedTypeMirror.
@@ -178,7 +179,7 @@ public interface SlotManager {
      * there is no VariableSlot this method throws an exception
      * @param atm An annotated type mirror with a VarAnnot in its primary annotations list
      */
-    VariableSlot getVariableSlot(AnnotatedTypeMirror atm);
+    Slot getVariableSlot(AnnotatedTypeMirror atm);
 
     /**
      * Return all slots collected by this SlotManager
@@ -190,7 +191,7 @@ public interface SlotManager {
      * Return all VariableSlots collected by this SlotManager
      * @return a lit of VariableSlots
      */
-    List<VariableSlot> getVariableSlots();
+    List<Slot> getVariableSlots();
 
     List<ConstantSlot> getConstantSlots();
 }

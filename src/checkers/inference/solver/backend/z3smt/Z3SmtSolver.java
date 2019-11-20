@@ -234,15 +234,13 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         // generate slot constraints
         for (Slot slot : slots) {
             if (slot.isVariable()) {
-                VariableSlot varSlot = (VariableSlot) slot;
-
-                BoolExpr wfConstraint = formatTranslator.encodeSlotWellformnessConstraint(varSlot);
+                BoolExpr wfConstraint = formatTranslator.encodeSlotWellformnessConstraint(slot);
 
                 if (!wfConstraint.simplify().isTrue()) {
                     solver.Assert(wfConstraint);
                 }
                 if (optimizingMode) {
-                	encodeSlotPreferenceConstraint(varSlot);
+                	encodeSlotPreferenceConstraint(slot);
                 }
             }
         }

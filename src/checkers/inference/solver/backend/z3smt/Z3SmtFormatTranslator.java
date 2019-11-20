@@ -1,5 +1,6 @@
 package checkers.inference.solver.backend.z3smt;
 
+import checkers.inference.model.ArithmeticVariableSlot;
 import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ExistentialVariableSlot;
@@ -12,7 +13,6 @@ import checkers.inference.solver.backend.z3smt.encoder.Z3SmtSoftConstraintEncode
 import checkers.inference.solver.frontend.Lattice;
 import com.microsoft.z3.BoolExpr;
 import com.microsoft.z3.Context;
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -72,18 +72,23 @@ public abstract class Z3SmtFormatTranslator<SlotEncodingT, SlotSolutionT>
     public SlotEncodingT serialize(LubVariableSlot slot) {
         return serializeVarSlot(slot);
     }
+    
+    @Override
+    public SlotEncodingT serialize(ArithmeticVariableSlot slot) {
+        return serializeVarSlot(slot);
+    }
 
     /**
      * Subclasses can override this method to perform pre-analysis of slots for encoding
      * optimization
      */
     public void preAnalyzeSlots(Collection<Slot> slots) {}
-
-    public abstract BoolExpr encodeSlotWellformnessConstraint(VariableSlot slot);
-
-    public abstract BoolExpr encodeSlotPreferenceConstraint(VariableSlot slot);
     
     protected abstract Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT> createSoftConstraintEncoder();
+
+    public abstract BoolExpr encodeSlotWellformnessConstraint(Slot slot);
+
+    public abstract BoolExpr encodeSlotPreferenceConstraint(Slot slot);
 
     public abstract Map<Integer, AnnotationMirror> decodeSolution(
             List<String> model, ProcessingEnvironment processingEnv);

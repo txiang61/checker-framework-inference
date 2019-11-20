@@ -1,6 +1,7 @@
 package checkers.inference.solver.backend;
 
 import checkers.inference.model.ArithmeticConstraint;
+import checkers.inference.model.ArithmeticVariableSlot;
 import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
@@ -13,6 +14,7 @@ import checkers.inference.model.InequalityConstraint;
 import checkers.inference.model.LubVariableSlot;
 import checkers.inference.model.PreferenceConstraint;
 import checkers.inference.model.RefinementVariableSlot;
+import checkers.inference.model.Slot;
 import checkers.inference.model.SubtypeConstraint;
 import checkers.inference.model.VariableSlot;
 import checkers.inference.solver.backend.encoder.ArithmeticConstraintEncoder;
@@ -234,6 +236,11 @@ public abstract class AbstractFormatTranslator<SlotEncodingT, ConstraintEncoding
 
     @Override
     public SlotEncodingT serialize(LubVariableSlot slot) {
+        return null;
+    }
+
+    @Override
+    public SlotEncodingT serialize(ArithmeticVariableSlot slot) {
         return null;
     }
 }
