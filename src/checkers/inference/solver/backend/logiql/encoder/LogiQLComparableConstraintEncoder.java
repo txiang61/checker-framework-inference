@@ -3,7 +3,6 @@ package checkers.inference.solver.backend.logiql.encoder;
 import checkers.inference.model.ComparableConstraint.ComparableOperationKind;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 import checkers.inference.solver.backend.encoder.binary.ComparableConstraintEncoder;
 import checkers.inference.solver.frontend.Lattice;
 import checkers.inference.solver.util.NameUtils;

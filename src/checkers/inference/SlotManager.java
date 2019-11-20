@@ -152,7 +152,7 @@ public interface SlotManager {
      AnnotationMirror createEquivalentVarAnno(final AnnotationMirror realQualifier);
 
     /** Return the variable identified by the given id or null if no such variable has been added */
-    Slot getVariable( int id );
+    Slot getSlot( int id );
 
     /**
      * Given a slot return an annotation that represents the slot when added to an AnnotatedTypeMirror.

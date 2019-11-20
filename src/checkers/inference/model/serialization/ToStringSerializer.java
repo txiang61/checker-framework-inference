@@ -12,6 +12,7 @@ import org.checkerframework.framework.util.AnnotationFormatter;
 import org.checkerframework.javacutil.PluginUtil;
 import checkers.inference.InferenceMain;
 import checkers.inference.model.ArithmeticConstraint;
+import checkers.inference.model.ArithmeticVariableSlot;
 import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
@@ -295,15 +296,6 @@ public class ToStringSerializer implements Serializer<String, String> {
         return String.join(" & ", serializedAssumptions);
     }
 
-    // variables
-    @Override
-    public String serialize(Slot slot) {
-        final StringBuilder sb = new StringBuilder();
-        sb.append(slot.getId());
-        optionallyShowVerbose(slot, sb);
-        return sb.toString();
-    }
-
     @Override
     public String serialize(VariableSlot slot) {
         final StringBuilder sb = new StringBuilder();
@@ -359,6 +351,14 @@ public class ToStringSerializer implements Serializer<String, String> {
             formatMerges(slot, sb);
             optionallyFormatAstPath(slot, sb);
         }
+        return sb.toString();
+    }
+
+    @Override
+    public String serialize(ArithmeticVariableSlot slot) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(slot.getId());
+        optionallyShowVerbose(slot, sb);
         return sb.toString();
     }
 

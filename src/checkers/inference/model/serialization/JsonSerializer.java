@@ -12,6 +12,7 @@ import checkers.inference.model.ImplicationConstraint;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import checkers.inference.model.ArithmeticConstraint;
+import checkers.inference.model.ArithmeticVariableSlot;
 import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
@@ -212,19 +213,13 @@ public class JsonSerializer implements Serializer<String, JSONObject> {
         return annotationSerializer.serialize(value);
     }
 
-    @Override
-    public String serialize(Slot slot) {
+    private String serializeSlot(Slot slot) {
         return VAR_PREFIX + slot.getId();
     }
 
     @Override
     public String serialize(VariableSlot slot) {
-        return serialize((Slot) slot);
-    }
-
-    @Override
-    public String serialize(RefinementVariableSlot slot) {
-        return serialize((Slot) slot);
+        return serializeSlot(slot);
     }
 
     @Override
@@ -240,12 +235,17 @@ public class JsonSerializer implements Serializer<String, JSONObject> {
 
     @Override
     public String serialize(CombVariableSlot slot) {
-        return serialize((Slot) slot);
+        return serializeSlot(slot);
     }
 
     @Override
     public String serialize(LubVariableSlot slot) {
-        return serialize((Slot) slot);
+        return serializeSlot(slot);
+    }
+
+    @Override
+    public String serialize(ArithmeticVariableSlot slot) {
+        return serializeSlot(slot);
     }
 
     @SuppressWarnings("unchecked")
