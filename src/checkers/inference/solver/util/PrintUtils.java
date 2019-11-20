@@ -290,12 +290,6 @@ public class PrintUtils {
         }
 
         @Override
-        public Void serialize(Slot slot) {
-            addSlotIfNotAdded(slot);
-            return null;
-        }
-
-        @Override
         public Void serialize(VariableSlot slot) {
             addSlotIfNotAdded(slot);
             return null;
