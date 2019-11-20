@@ -328,7 +328,7 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
         smtFileContents.append(encoder.encodeAndGetSoftConstraints(constraints));
     }
 
-    protected void encodeSlotPreferenceConstraint(VariableSlot varSlot) {
+    protected void encodeSlotPreferenceConstraint(Slot varSlot) {
         // empty string means no optimization group
         solver.AssertSoft(
                 formatTranslator.encodeSlotPreferenceConstraint(varSlot), 1, "");

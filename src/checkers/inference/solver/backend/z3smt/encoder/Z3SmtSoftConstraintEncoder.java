@@ -45,6 +45,7 @@ public abstract class Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT> {
     	this.lattice = lattice;
         this.formatTranslator = z3SmtFormatTranslator;
         this.ctx = ctx;
+        this.softConstraints = new StringBuffer();
     }
 	
     protected abstract void encodeSoftSubtypeConstraint(SubtypeConstraint constraint);

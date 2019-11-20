@@ -39,7 +39,7 @@ public abstract class Z3SmtFormatTranslator<SlotEncodingT, SlotSolutionT>
         finishInitializingEncoders();
     }
 
-    protected abstract SlotEncodingT serializeVarSlot(VariableSlot slot);
+    protected abstract SlotEncodingT serializeVarSlot(Slot slot);
 
     protected abstract SlotEncodingT serializeConstantSlot(ConstantSlot slot);
 
