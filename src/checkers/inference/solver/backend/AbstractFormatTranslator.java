@@ -210,6 +210,11 @@ public abstract class AbstractFormatTranslator<SlotEncodingT, ConstraintEncoding
     }
 
     @Override
+    public SlotEncodingT serialize(Slot slot) {
+        return null;
+    }
+
+    @Override
     public SlotEncodingT serialize(VariableSlot slot) {
         return null;
     }

@@ -95,6 +95,14 @@ public class DefaultSlotManager implements SlotManager {
      * {@link ArithmeticVariableSlot}.
      */
     private final Map<AnnotationLocation, Integer> arithmeticSlotCache;
+    
+    /**
+     * A map of {@link AnnotationLocation} to {@link Integer} for caching
+     * {@link ComparableVariableSlot}s. The annotation location uniquely identifies an
+     * {@link ComparableVariableSlot}. The {@link Integer} is the Id of the corresponding
+     * {@link ComparableVariableSlot}.
+     */
+    private final Map<AnnotationLocation, Integer> comparableSlotCache;
 
     private final Set<Class<? extends Annotation>> realQualifiers;
     private final ProcessingEnvironment processingEnvironment;
@@ -118,6 +126,7 @@ public class DefaultSlotManager implements SlotManager {
         combSlotPairCache = new LinkedHashMap<>();
         lubSlotPairCache = new LinkedHashMap<>();
         arithmeticSlotCache = new LinkedHashMap<>();
+        comparableSlotCache = new LinkedHashMap<>();
 
         if (storeConstants) {
             Set<? extends AnnotationMirror> mirrors = InferenceMain.getInstance().getRealTypeFactory().getQualifierHierarchy().getTypeQualifiers();

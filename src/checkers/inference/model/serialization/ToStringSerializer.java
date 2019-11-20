@@ -297,6 +297,14 @@ public class ToStringSerializer implements Serializer<String, String> {
     }
 
     @Override
+    public String serialize(Slot slot) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(slot.getId());
+        optionallyShowVerbose(slot, sb);
+        return sb.toString();
+    }
+
+    @Override
     public String serialize(VariableSlot slot) {
         final StringBuilder sb = new StringBuilder();
         sb.append(slot.getId());

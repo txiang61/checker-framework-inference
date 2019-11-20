@@ -218,12 +218,6 @@ public class JsonSerializer implements Serializer<String, JSONObject> {
     }
 
     @Override
-    public String serialize(VariableSlot slot) {
-        return serializeSlot(slot);
-    }
-
-    @Override
-    public String serialize(RefinementVariableSlot slot) {
         return serializeSlot(slot);
     }
 

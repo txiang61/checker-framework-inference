@@ -1,5 +1,6 @@
 package checkers.inference.solver.backend.maxsat.encoder;
 
+import checkers.inference.model.ComparableConstraint.ComparableOperationKind;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Slot;
 import checkers.inference.solver.backend.encoder.binary.ComparableConstraintEncoder;
@@ -59,4 +60,24 @@ public class MaxSATComparableConstraintEncoder extends MaxSATAbstractConstraintE
     public VecInt[] encodeConstant_Variable(ConstantSlot fst, Slot snd) {
         return encodeVariable_Constant(snd, fst);
     }
+
+	@Override
+	public VecInt[] encodeVariable_Variable(ComparableOperationKind operation, Slot fst, Slot snd) {
+		return encodeVariable_Variable(fst, snd);
+	}
+
+	@Override
+	public VecInt[] encodeVariable_Constant(ComparableOperationKind operation, Slot fst, ConstantSlot snd) {
+		return encodeVariable_Constant(fst, snd);
+	}
+
+	@Override
+	public VecInt[] encodeConstant_Variable(ComparableOperationKind operation, ConstantSlot fst, Slot snd) {
+		return encodeConstant_Variable(fst, snd);
+	}
+
+	@Override
+	public VecInt[] encodeConstant_Constant(ComparableOperationKind operation, ConstantSlot fst, ConstantSlot snd) {
+		return null;
+	}
 }
