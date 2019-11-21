@@ -4,6 +4,7 @@ import org.checkerframework.javacutil.BugInCF;
 import checkers.inference.model.ArithmeticConstraint;
 import checkers.inference.model.BinaryConstraint;
 import checkers.inference.model.CombineConstraint;
+import checkers.inference.model.ComparableConstraint;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ExistentialConstraint;
 import checkers.inference.model.ImplicationConstraint;
@@ -76,6 +77,30 @@ public class ConstraintEncoderCoordinator {
             default:
                 throw new BugInCF("Unsupported SlotSlotCombo enum.");
         }
+    }
+    
+    public static <ConstraintEncodingT> ConstraintEncodingT dispatch(
+            ComparableConstraint constraint,
+            ComparableConstraintEncoder<ConstraintEncodingT> encoder) {
+        switch (SlotSlotCombo.valueOf(constraint.getLeft(), constraint.getRight())) {
+            case VARIABLE_VARIABLE:
+                return encoder.encodeVariable_Variable(constraint.getOperation(),
+                        constraint.getLeft(),
+                        constraint.getRight());
+            case VARIABLE_CONSTANT:
+                return encoder.encodeVariable_Constant(constraint.getOperation(),
+                        constraint.getLeft(),
+                        (ConstantSlot) constraint.getRight());
+            case CONSTANT_VARIABLE:
+                return encoder.encodeConstant_Variable(constraint.getOperation(),
+                        (ConstantSlot) constraint.getLeft(),
+                        constraint.getRight());
+            case CONSTANT_CONSTANT:
+                return encoder.encodeConstant_Constant(constraint.getOperation(),
+                        (ConstantSlot) constraint.getLeft(),
+                        (ConstantSlot) constraint.getRight());
+        }
+        return null;
     }
 
     public static <ConstraintEncodingT> ConstraintEncodingT dispatch(

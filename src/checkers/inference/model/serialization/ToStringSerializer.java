@@ -194,9 +194,9 @@ public class ToStringSerializer implements Serializer<String, String> {
         showVerboseVars = false;
         final StringBuilder sb = new StringBuilder();
         sb.append(getCurrentIndentString())
-          .append(constraint.getFirst().serialize(this))
+          .append(constraint.getLeft().serialize(this))
           .append(" <~> ")
-          .append(constraint.getSecond().serialize(this));
+          .append(constraint.getRight().serialize(this));
         showVerboseVars = prevShowVerboseVars;
         return sb.toString();
     }

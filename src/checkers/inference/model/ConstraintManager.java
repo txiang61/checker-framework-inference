@@ -116,14 +116,6 @@ public class ConstraintManager {
      * Creates a {@link ComparableConstraint} between the two slots, which may be normalized to
      * {@link AlwaysTrueConstraint} or {@link AlwaysFalseConstraint}.
      */
-    public Constraint createComparableConstraint(Slot first, Slot second) {
-        return ComparableConstraint.create(first, second, getCurrentLocation(), realQualHierarchy);
-    }
-    
-    /**
-     * Creates a {@link ComparableConstraint} between the two slots, which may be normalized to
-     * {@link AlwaysTrueConstraint} or {@link AlwaysFalseConstraint}.
-     */
     public Constraint createComparableConstraint(ComparableOperationKind operation, Slot first, 
     		Slot second) {
         return ComparableConstraint.create(operation, first, second, getCurrentLocation(), realQualHierarchy);
@@ -244,27 +236,20 @@ public class ConstraintManager {
             add(constraint);
         }
     }
-
+    
     /**
      * Creates and adds a {@link ComparableConstraint} between the two slots to the constraint set,
-     * which may be normalized to {@link AlwaysTrueConstraint}. An error is issued if the
-     * {@link ComparableConstraint} is always unsatisfiable.
+     * which may be normalized to {@link AlwaysTrueConstraint} if kind is a REFERENCE. 
+     * An error is issued if the {@link ComparableConstraint} is always unsatisfiable.
      */
-    public void addComparableConstraint(Slot first, Slot second) {
-        Constraint constraint = createComparableConstraint(first, second);
+    public void addComparableConstraint(ComparableOperationKind operation, Slot first, Slot second) {
+        Constraint constraint = createComparableConstraint(operation, first, second);
         if (constraint instanceof AlwaysFalseConstraint) {
             checker.report(Result.failure("comparable.constraint.unsatisfiable", first, second),
                     visitorState.getPath().getLeaf());
         } else {
             add(constraint);
         }
-    }
-    
-    /**
-     * Creates and adds a {@link ComparableConstraint} between the two slots to the constraint set.
-     */
-    public void addComparableConstraint(ComparableOperationKind operation, Slot first, Slot second) {
-        add(createComparableConstraint(operation, first, second));
     }
 
     /**

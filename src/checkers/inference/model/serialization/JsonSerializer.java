@@ -310,14 +310,14 @@ public class JsonSerializer implements Serializer<String, JSONObject> {
     @SuppressWarnings("unchecked")
     @Override
     public JSONObject serialize(ComparableConstraint constraint) {
-        if (constraint.getFirst() == null || constraint.getSecond() == null) {
+        if (constraint.getLeft() == null || constraint.getRight() == null) {
             return null;
         }
 
         JSONObject obj = new JSONObject();
         obj.put(CONSTRAINT_KEY, COMP_CONSTRAINT_KEY);
-        obj.put(COMP_LHS, constraint.getFirst().serialize(this));
-        obj.put(COMP_RHS, constraint.getSecond().serialize(this));
+        obj.put(COMP_LHS, constraint.getLeft().serialize(this));
+        obj.put(COMP_RHS, constraint.getRight().serialize(this));
         return obj;
     }
 

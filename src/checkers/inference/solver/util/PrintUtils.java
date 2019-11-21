@@ -248,8 +248,8 @@ public class PrintUtils {
 
         @Override
         public Void serialize(ComparableConstraint constraint) {
-            constraint.getFirst().serialize(this);
-            constraint.getSecond().serialize(this);
+            constraint.getLeft().serialize(this);
+            constraint.getRight().serialize(this);
             return null;
         }
 

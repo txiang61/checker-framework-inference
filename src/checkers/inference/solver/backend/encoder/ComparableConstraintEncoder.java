@@ -1,10 +1,10 @@
-package checkers.inference.solver.backend.encoder.binary;
+package checkers.inference.solver.backend.encoder;
 
 import checkers.inference.model.ComparableConstraint.ComparableOperationKind;
+import checkers.inference.solver.backend.encoder.binary.BinaryConstraintEncoder;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Slot;
 import checkers.inference.model.VariableSlot;
-import checkers.inference.solver.backend.encoder.AbstractConstraintEncoderFactory;
 
 /**
  * A marker interface that all constraint encoders that support encoding {@link checkers.inference.model.ComparableConstraint}
@@ -14,16 +14,16 @@ import checkers.inference.solver.backend.encoder.AbstractConstraintEncoderFactor
  * @see checkers.inference.model.ComparableConstraint
  * @see AbstractConstraintEncoderFactory#createComparableConstraintEncoder()
  */
-public interface ComparableConstraintEncoder<ConstraintEncodingT> extends BinaryConstraintEncoder<ConstraintEncodingT> {
+public interface ComparableConstraintEncoder<ConstraintEncodingT> {
 	ConstraintEncodingT encodeVariable_Variable(ComparableOperationKind operation,
-            Slot fst, Slot snd);
+            Slot left, Slot right);
 
     ConstraintEncodingT encodeVariable_Constant(ComparableOperationKind operation,
-            Slot fst, ConstantSlot snd);
+    		Slot left, ConstantSlot right);
 
     ConstraintEncodingT encodeConstant_Variable(ComparableOperationKind operation,
-            ConstantSlot fst, Slot snd);
+            ConstantSlot left, Slot right);
 
     ConstraintEncodingT encodeConstant_Constant(ComparableOperationKind operation,
-            ConstantSlot fst, ConstantSlot snd);
+            ConstantSlot left, ConstantSlot right);
 }
