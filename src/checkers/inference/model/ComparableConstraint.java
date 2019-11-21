@@ -11,20 +11,21 @@ import com.sun.source.tree.Tree.Kind;
  * Represents a constraint that two slots must be comparable.
  *
  */
-public class ComparableConstraint extends Constraint implements BinaryConstraint {
+public class ComparableConstraint extends Constraint {
 
     private final ComparableOperationKind operation;
-    private final Slot first;
-    private final Slot second;
+    private final Slot left;
+    private final Slot right;
     
     public enum ComparableOperationKind {
-    	ANY(""),
+    	REFERENCE(""),
     	EQUAL_TO("=="),
     	NOT_EQUAL_TO("!="),
     	GREATER_THAN(">"),
     	GREATER_THAN_EQUAL(">="),
     	LESS_THAN("<"),
-    	LESS_THAN_EQUAL("<=");
+    	LESS_THAN_EQUAL("<="),
+    	OTHER("?");
 
         // stores the symbol of the operation
         private final String opSymbol;
@@ -47,9 +48,12 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
                 	return LESS_THAN;
                 case LESS_THAN_EQUAL:
                 	return LESS_THAN_EQUAL;
+                case INSTANCE_OF:
+                case TYPE_CAST:
+                	return REFERENCE;
                 default:
-                    throw new BugInCF("There are no defined ComparableOperationKind "
-                            + "for the given com.sun.source.tree.Tree.Kind: " + kind);
+                	// TODO: Handle all cases and throw error on unsupported operations
+                    return OTHER;
             }
         }
 
@@ -58,27 +62,27 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         }
     }
 
-    private ComparableConstraint(ComparableOperationKind operation, Slot first, Slot second,
+    private ComparableConstraint(ComparableOperationKind operation, Slot left, Slot right,
             AnnotationLocation location) {
-        super(Arrays.asList(first, second), location);
-        this.first = first;
-        this.second = second;
+        super(Arrays.asList(left, right), location);
+        this.left = left;
+        this.right = right;
         this.operation = operation;
     }
 
-    private ComparableConstraint(ComparableOperationKind operation, Slot first, Slot second) {
-        super(Arrays.asList(first, second));
-        this.first = first;
-        this.second = second;
+    private ComparableConstraint(ComparableOperationKind operation, Slot left, Slot right) {
+        super(Arrays.asList(left, right));
+        this.left = left;
+        this.right = right;
         this.operation = operation;
     }
     
-    protected static Constraint create(ComparableOperationKind operation, Slot first, Slot second,
+    protected static Constraint create(ComparableOperationKind operation, Slot left, Slot right,
     		AnnotationLocation location, QualifierHierarchy realQualHierarchy) {
-        if (operation == null || first == null || second == null) {
+        if (operation == null || left == null || right == null) {
             throw new BugInCF("Create comparable constraint with null argument. "
                     + "Operation: " + operation + " Subtype: "
-                    + first + " Supertype: " + second);
+                    + left + " Supertype: " + right);
         }
 
         // Normalization cases:
@@ -87,24 +91,24 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         // otherwise => CREATE_REAL_COMPARABLE_CONSTRAINT
 
         // C1 <~> C2 => TRUE/FALSE depending on relationship
-        if (first instanceof ConstantSlot && second instanceof ConstantSlot 
-        		&& operation == ComparableOperationKind.ANY) {
-            ConstantSlot firstConst = (ConstantSlot) first;
-            ConstantSlot secondConst = (ConstantSlot) second;
+        if (left instanceof ConstantSlot && right instanceof ConstantSlot 
+        		&& operation == ComparableOperationKind.REFERENCE) {
+            ConstantSlot leftConst = (ConstantSlot) left;
+            ConstantSlot rightConst = (ConstantSlot) right;
 
-            return realQualHierarchy.isSubtype(firstConst.getValue(), secondConst.getValue())
-                    || realQualHierarchy.isSubtype(secondConst.getValue(), firstConst.getValue())
+            return realQualHierarchy.isSubtype(leftConst.getValue(), rightConst.getValue())
+                    || realQualHierarchy.isSubtype(rightConst.getValue(), leftConst.getValue())
                             ? AlwaysTrueConstraint.create()
                             : AlwaysFalseConstraint.create();
         }
         
         // V <~> V => TRUE (every type is always comparable to itself)
-        if (first == second) {
+        if (left == right) {
             return AlwaysTrueConstraint.create();
         }
 
         // otherwise => CREATE_REAL_COMPARABLE_CONSTRAINT
-        return new ComparableConstraint(operation, first, second, location);
+        return new ComparableConstraint(operation, left, right, location);
     }
 
     @Override
@@ -116,26 +120,19 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         return operation;
     }
 
-    @Override
-    public Slot getFirst() {
-        return first;
+    public Slot getLeft() {
+        return left;
     }
 
-    @Override
-    public Slot getSecond() {
-        return second;
-    }
-
-    @Override
-    public Constraint make(Slot first, Slot second) {
-        return new ComparableConstraint(ComparableOperationKind.ANY, first, second);
+    public Slot getRight() {
+        return right;
     }
 
     @Override
     public int hashCode() {
         int code = 1;
-        code = code + ((first == null) ? 0 : first.hashCode());
-        code = code + ((second == null) ? 0 : second.hashCode());
+        code = code + ((left == null) ? 0 : left.hashCode());
+        code = code + ((right == null) ? 0 : right.hashCode());
         code = code + ((operation == null) ? 0 : operation.hashCode());
         return code;
     }
@@ -149,7 +146,7 @@ public class ComparableConstraint extends Constraint implements BinaryConstraint
         if (getClass() != obj.getClass())
             return false;
         ComparableConstraint other = (ComparableConstraint) obj;
-        if (first.equals(other.first) && second.equals(other.second) 
+        if (left.equals(other.left) && right.equals(other.right) 
         		&& operation.equals(other.operation)) {
             return true;
         } else {

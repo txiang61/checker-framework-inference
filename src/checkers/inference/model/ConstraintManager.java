@@ -116,14 +116,6 @@ public class ConstraintManager {
      * Creates a {@link ComparableConstraint} between the two slots, which may be normalized to
      * {@link AlwaysTrueConstraint} or {@link AlwaysFalseConstraint}.
      */
-    public Constraint createComparableConstraint(Slot first, Slot second) {
-        return createComparableConstraint(ComparableOperationKind.ANY, first, second);
-    }
-    
-    /**
-     * Creates a {@link ComparableConstraint} between the two slots, which may be normalized to
-     * {@link AlwaysTrueConstraint} or {@link AlwaysFalseConstraint}.
-     */
     public Constraint createComparableConstraint(ComparableOperationKind operation, Slot first, 
     		Slot second) {
         return ComparableConstraint.create(operation, first, second, getCurrentLocation(), realQualHierarchy);
@@ -244,18 +236,11 @@ public class ConstraintManager {
             add(constraint);
         }
     }
-
-    /**
-     * Creates and adds a {@link ComparableConstraint} between the two slots to the constraint set,
-     * which may be normalized to {@link AlwaysTrueConstraint}. An error is issued if the
-     * {@link ComparableConstraint} is always unsatisfiable.
-     */
-    public void addComparableConstraint(Slot first, Slot second) {
-    	addComparableConstraint(ComparableOperationKind.ANY, first, second);
-    }
     
     /**
-     * Creates and adds a {@link ComparableConstraint} between the two slots to the constraint set.
+     * Creates and adds a {@link ComparableConstraint} between the two slots to the constraint set,
+     * which may be normalized to {@link AlwaysTrueConstraint} if kidn is a reference. 
+     * An error is issued if the {@link ComparableConstraint} is always unsatisfiable.
      */
     public void addComparableConstraint(ComparableOperationKind operation, Slot first, Slot second) {
         Constraint constraint = createComparableConstraint(operation, first, second);

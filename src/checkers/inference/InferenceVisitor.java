@@ -31,6 +31,7 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
+import checkers.inference.model.ComparableConstraint.ComparableOperationKind;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.RefinementVariableSlot;
@@ -39,6 +40,7 @@ import checkers.inference.model.VariableSlot;
 import checkers.inference.qual.VarAnnot;
 import checkers.inference.util.InferenceUtil;
 
+import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
@@ -330,7 +332,8 @@ public class InferenceVisitor<Checker extends InferenceChecker,
             } else {
                 if (!InferenceMain.getInstance().isPerformingFlow()) {
                     logger.fine("InferenceVisitor::areComparable: Comparable constraint constructor invocation.");
-                    InferenceMain.getInstance().getConstraintManager().addComparableConstraint(el1, el2);
+                	ComparableOperationKind opKind = ComparableOperationKind.fromTreeKind(node.getKind());
+                	InferenceMain.getInstance().getConstraintManager().addComparableConstraint(opKind, el1, el2);
                 }
             }
         } else {
