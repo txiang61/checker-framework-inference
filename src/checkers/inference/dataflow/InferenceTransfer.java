@@ -36,7 +36,6 @@ import checkers.inference.model.AnnotationLocation;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 import checkers.inference.util.InferenceUtil;
 
 /**
@@ -137,8 +136,12 @@ public class InferenceTransfer extends CFTransfer {
                 assert false;
             }
 
-            return storeDeclaration(lhs, (VariableTree) assignmentNode.getTree(), store, typeFactory);
+            if (assignmentNode.getTarget() instanceof LocalVariableNode
+                    && atm.getKind() != TypeKind.TYPEVAR) {
+                return createRefinementVar(assignmentNode.getTarget(), assignmentNode.getTree(), store, atm);
+            }
 
+            return storeDeclaration(lhs, (VariableTree) assignmentNode.getTree(), store, typeFactory);
         } else if (lhs.getTree().getKind() == Tree.Kind.IDENTIFIER
                 || lhs.getTree().getKind() == Tree.Kind.MEMBER_SELECT) {
             // Create Refinement Variable
@@ -205,6 +208,9 @@ public class InferenceTransfer extends CFTransfer {
             AnnotatedTypeMirror atm) {
 
         Slot slotToRefine = getInferenceAnalysis().getSlotManager().getVariableSlot(atm);
+        while (slotToRefine instanceof RefinementVariableSlot) {
+            slotToRefine = ((RefinementVariableSlot)slotToRefine).getRefined();
+        }
 
         logger.fine("Creating refinement variable for tree: " + assignmentTree);
         RefinementVariableSlot refVar;
@@ -235,7 +241,6 @@ public class InferenceTransfer extends CFTransfer {
         store.updateForAssignment(lhs, result);
         return new RegularTransferResult<CFValue, CFStore>(finishValue(result, store), store);
     }
-
 
     /**
      * {@code
