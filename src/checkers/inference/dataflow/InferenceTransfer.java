@@ -4,8 +4,6 @@ import org.checkerframework.dataflow.analysis.RegularTransferResult;
 import org.checkerframework.dataflow.analysis.TransferInput;
 import org.checkerframework.dataflow.analysis.TransferResult;
 import org.checkerframework.dataflow.cfg.node.AssignmentNode;
-import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
-import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
 import org.checkerframework.dataflow.cfg.node.Node;
 import org.checkerframework.dataflow.cfg.node.StringConcatenateAssignmentNode;
 import org.checkerframework.dataflow.cfg.node.TernaryExpressionNode;
@@ -36,7 +34,6 @@ import checkers.inference.model.AnnotationLocation;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 import checkers.inference.util.InferenceUtil;
 
 /**
@@ -120,26 +117,8 @@ public class InferenceTransfer extends CFTransfer {
             CFValue result = analysis.createAbstractValue(atm);
             return new RegularTransferResult<CFValue, CFStore>(finishValue(result, store), store);
 
-        } else if (isDeclarationWithInitializer(assignmentNode)) {
-            // Add declarations with initializers to the store.
-
-            // This is needed to trigger a merge refinement variable creation when two stores are merged:
-            // String a = null; // Add VarAnno to store
-            // if ( ? ) {
-            //   a = ""; // Add RefVar to store
-            // }
-            // // merge RefVar will be created only if VarAnno and RefVar are both in store
-            // a.toString()
-
-            // TODO: Remove after establishing there are no other cases.
-            if (! (assignmentNode.getTarget() instanceof LocalVariableNode
-                    || assignmentNode.getTarget() instanceof FieldAccessNode)) {
-                assert false;
-            }
-
-            return storeDeclaration(lhs, (VariableTree) assignmentNode.getTree(), store, typeFactory);
-
-        } else if (lhs.getTree().getKind() == Tree.Kind.IDENTIFIER
+        } else if (isDeclarationWithInitializer(assignmentNode)
+                || lhs.getTree().getKind() == Tree.Kind.IDENTIFIER
                 || lhs.getTree().getKind() == Tree.Kind.MEMBER_SELECT) {
             // Create Refinement Variable
 

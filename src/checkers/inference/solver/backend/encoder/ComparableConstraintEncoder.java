@@ -1,10 +1,8 @@
 package checkers.inference.solver.backend.encoder;
 
 import checkers.inference.model.ComparableConstraint.ComparableOperationKind;
-import checkers.inference.solver.backend.encoder.binary.BinaryConstraintEncoder;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 
 /**
  * A marker interface that all constraint encoders that support encoding {@link checkers.inference.model.ComparableConstraint}
