@@ -578,11 +578,7 @@ public class InferenceVisitor<Checker extends InferenceChecker,
         constraintManager.addEqualityConstraint(sup, sub);
 
         // Refinement variable still needs to be a subtype of its declared type value
-        Slot refinedsup = ((RefinementVariableSlot) sup).getRefined();
-        while (refinedsup instanceof RefinementVariableSlot) {
-            refinedsup = ((RefinementVariableSlot) refinedsup).getRefined();
-        }
-        constraintManager.addSubtypeConstraint(sup, refinedsup);
+        constraintManager.addSubtypeConstraint(sup, ((RefinementVariableSlot) sup).getRefined());
     }
 
     /**
@@ -674,11 +670,7 @@ public class InferenceVisitor<Checker extends InferenceChecker,
                     constraintManager.addEqualityConstraint(sup, sub);
 
                     // Refinement variable still needs to be a subtype of its declared type value
-                    Slot refinedsup = ((RefinementVariableSlot) sup).getRefined();
-                    while (refinedsup instanceof RefinementVariableSlot) {
-                        refinedsup = ((RefinementVariableSlot) refinedsup).getRefined();
-                    }
-                    constraintManager.addSubtypeConstraint(sup, refinedsup);
+                    constraintManager.addSubtypeConstraint(sup, ((RefinementVariableSlot) sup).getRefined());
                 }
             }
         }
