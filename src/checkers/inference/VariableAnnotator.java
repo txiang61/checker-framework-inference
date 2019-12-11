@@ -44,7 +44,6 @@ import com.sun.source.tree.ArrayTypeTree;
 import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.ClassTree;
 import com.sun.source.tree.CompilationUnitTree;
-import com.sun.source.tree.CompoundAssignmentTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.IntersectionTypeTree;
 import com.sun.source.tree.MemberSelectTree;
@@ -54,7 +53,6 @@ import com.sun.source.tree.ParameterizedTypeTree;
 import com.sun.source.tree.Tree;
 import com.sun.source.tree.Tree.Kind;
 import com.sun.source.tree.TypeParameterTree;
-import com.sun.source.tree.UnaryTree;
 import com.sun.source.tree.UnionTypeTree;
 import com.sun.source.tree.VariableTree;
 import com.sun.source.tree.WildcardTree;
@@ -1256,20 +1254,6 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
             return null;
         }
 
-        if (tree instanceof CompoundAssignmentTree) {
-            // Since there are so many kinds of compound assignment trees
-            // handle these with an if instead of in the switch.
-            handleCompoundAssignmentTree(primitiveType, (CompoundAssignmentTree)tree);
-            return null;
-        }
-
-        if (tree instanceof UnaryTree) {
-            // Since there are so many kinds of unary trees
-            // handle these with an if instead of in the switch.
-            handleUnaryTree(primitiveType, (UnaryTree)tree);
-            return null;
-        }
-
         if (tree instanceof VariableTree) {
             addPrimaryVariable(primitiveType, ((VariableTree) tree).getType());
         } else {
@@ -1544,48 +1528,6 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
                 final Pair<Slot, Set<? extends AnnotationMirror>> varATMPair = Pair.<Slot, Set<? extends AnnotationMirror>>of(
                         slotManager.getVariableSlot(atm), lubs);
                 treeToVarAnnoPair.put(binaryTree, varATMPair);
-            } else {
-                // The slot returned was a constant. Regenerating it is ok.
-            }
-        }
-    }
-
-    /**
-     * Annotate a UnaryTree.
-     * This function is only visited after calling variableAnnotator.visit for UnaryTree in InferenceTreeAnnotator
-     * @param atm the type of the unary tree to annotate
-     * @param unaryTree the unary tree
-     */
-    public void handleUnaryTree(AnnotatedTypeMirror atm, UnaryTree unaryTree) {
-
-        if (treeToVarAnnoPair.containsKey(unaryTree)) {
-            atm.replaceAnnotations(treeToVarAnnoPair.get(unaryTree).second);
-        } else {
-            if (slotManager.getVariableSlot(atm).isVariable()) {
-                final Pair<Slot, Set<? extends AnnotationMirror>> varATMPair = Pair.<Slot, Set<? extends AnnotationMirror>>of(
-                        slotManager.getVariableSlot(atm), AnnotationUtils.createAnnotationSet());
-                treeToVarAnnoPair.put(unaryTree, varATMPair);
-            } else {
-                // The slot returned was a constant. Regenerating it is ok.
-            }
-        }
-    }
-
-    /**
-     * Annotate a CompoundAssignmentTree by creating and storing the LUB of the elements.
-     * This function is only visited after calling variableAnnotator.visit for CompoundAssignmentTree in InferenceTreeAnnotator
-     * @param atm the type of the compound assignment tree to annotate
-     * @param compoundTree the compound assignment tree
-     */
-    public void handleCompoundAssignmentTree(AnnotatedTypeMirror atm, CompoundAssignmentTree compoundTree) {
-
-        if (treeToVarAnnoPair.containsKey(compoundTree)) {
-            atm.replaceAnnotations(treeToVarAnnoPair.get(compoundTree).second);
-        } else {
-            if (slotManager.getVariableSlot(atm).isVariable()) {
-                final Pair<Slot, Set<? extends AnnotationMirror>> varATMPair = Pair.<Slot, Set<? extends AnnotationMirror>>of(
-                        slotManager.getVariableSlot(atm), AnnotationUtils.createAnnotationSet());
-                treeToVarAnnoPair.put(compoundTree, varATMPair);
             } else {
                 // The slot returned was a constant. Regenerating it is ok.
             }
