@@ -664,7 +664,9 @@ public class InferenceVisitor<Checker extends InferenceChecker,
                     logger.fine("InferenceVisitor::commonAssignmentCheck: Equality constraint for qualifiers sub: " + sub + " sup: " + sup);
 
                     // Equality between the refvar and the value
-                    constraintManager.addEqualityConstraint(sup, sub);
+                    if (sub != null) {
+                        constraintManager.addEqualityConstraint(sup, sub);
+                    }
 
                     // Refinement variable still needs to be a subtype of its declared type value
                     constraintManager.addSubtypeConstraint(sup,
