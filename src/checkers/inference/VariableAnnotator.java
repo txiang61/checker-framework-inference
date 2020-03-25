@@ -1106,10 +1106,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
             // Create a variable from an ASTPath
             final TreePath pathToTree = inferenceTypeFactory.getPath(topLevelTree);
             ASTRecord astRec = ASTPathUtil.getASTRecordForPath(inferenceTypeFactory, pathToTree);
-            if (astRec != null) {
-                astRec = astRec.newArrayLevel(level);
-                replaceOrCreateEquivalentVarAnno(type, tree, new AstPathLocation(astRec));
-            }
+            replaceOrCreateEquivalentVarAnno(type, tree, new AstPathLocation(astRec));
 
         } else if (!(tree.getKind() == Tree.Kind.NEW_ARRAY
                      || tree.getKind() == Tree.Kind.ARRAY_TYPE)) {
