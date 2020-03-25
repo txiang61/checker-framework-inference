@@ -161,8 +161,7 @@ public class InferenceMain {
                 "-Xmaxerrs", "1000",
                 "-XDignore.symbol.file",
                 "-source", "8",
-                "-target", "8",
-                "-Awarns"));
+                "-target", "8"));
 
         if (InferenceOptions.cfArgs != null) {
             checkerFrameworkArgs.addAll(parseCfArgs());
@@ -457,6 +456,9 @@ public class InferenceMain {
                 logger.severe("Error return code from javac! Quitting.");
                 logger.info(javacOutStr);
                 System.exit(1);
+            } else if (!javacOutStr.isEmpty()) {
+                logger.severe("Warning output from javac.");
+                logger.info(javacOutStr);
             }
         }
     }
