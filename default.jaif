@@ -1,0 +1,21 @@
+package interning.qual:
+  annotation @UnknownInterned:
+
+package interning.qual:
+  annotation @PolyInterned:
+
+package interning.qual:
+  annotation @Interned:
+
+package :
+class MapAssignment:
+field a:
+insert-annotation Variable.type, ParameterizedType.type: @interning.qual.UnknownInterned
+
+field b:
+insert-annotation Variable.type, ParameterizedType.type: @interning.qual.UnknownInterned
+insert-annotation Variable.type, ParameterizedType.typeArgument 1: @interning.qual.Interned
+
+method <init>()V:
+
+
