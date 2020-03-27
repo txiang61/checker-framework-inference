@@ -9,9 +9,9 @@ import org.checkerframework.framework.type.StructuralEqualityVisitHistory;
 import org.checkerframework.framework.type.SubtypeVisitHistory;
 import org.checkerframework.javacutil.BugInCF;
 
-import checkers.inference.model.Slot;
-
 import javax.lang.model.element.AnnotationMirror;
+
+import checkers.inference.model.Slot;
 
 /**
  *  The InferenceTypeHierarchy along with the InferenceQualifierHierarchy is responsible for
@@ -26,6 +26,7 @@ import javax.lang.model.element.AnnotationMirror;
 public class InferenceTypeHierarchy extends DefaultTypeHierarchy {
     private final AnnotationMirror varAnnot;
     // TODO: Think this through, add any missing constraints
+
 
     /**
      * Constructs an instance of {@code TypeHierarchy} for the type system
@@ -50,12 +51,6 @@ public class InferenceTypeHierarchy extends DefaultTypeHierarchy {
     public StructuralEqualityComparer createEqualityComparer() {
         return new InferenceEqualityComparer(this.typeargVisitHistory,
                 InferenceQualifierHierarchy.findVarAnnot(qualifierHierarchy.getTopAnnotations()));
-    }
-
-    @Override
-    public boolean isSubtype(
-            final AnnotatedTypeMirror subtype, final AnnotatedTypeMirror supertype) {
-    	 return isSubtype(subtype, supertype, varAnnot);
     }
 }
 
