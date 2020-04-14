@@ -79,12 +79,24 @@ if [ "$CLASSPATH" != "" ] ; then
     classpath=${classpath}:${CLASSPATH}
 fi
 
+<<<<<<< HEAD
 export DYLD_LIBRARY_PATH=${libDir}
 export LD_LIBRARY_PATH=${libDir}
 
 runtimeBCP=""
+=======
+
+>>>>>>> typetools/master
 java -version 2>&1 | grep version | grep 1.8 > /dev/null
-if [ $? -eq 0 ]; then
+isJava8=$?
+
+jdkPaths=""
+if [ $isJava8 -eq 0 ]; then
+    jdkPaths=${cfDir}"/checker/dist/jdk8.jar"
+fi
+
+runtimeBCP=""
+if [ $isJava8 -eq 0 ]; then
     runtimeBCP="${distDir}/javac.jar"
 fi
 
