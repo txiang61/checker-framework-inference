@@ -1,10 +1,11 @@
 package checkers.inference;
 
-import checkers.inference.model.LubVariableSlot;
+import checkers.inference.model.*;
 import org.checkerframework.framework.qual.PolymorphicQualifier;
+import org.checkerframework.common.subtyping.qual.Unqualified;
 import org.checkerframework.framework.type.QualifierHierarchy;
 import org.checkerframework.framework.util.MultiGraphQualifierHierarchy;
-import org.checkerframework.javacutil.PluginUtil;
+import org.checkerframework.javacutil.SystemUtil;
 import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.BugInCF;
 
@@ -16,10 +17,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.lang.model.element.AnnotationMirror;
-import checkers.inference.model.ConstantSlot;
-import checkers.inference.model.ConstraintManager;
-import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
+
 import checkers.inference.qual.VarAnnot;
 import checkers.inference.util.InferenceUtil;
 
@@ -49,7 +47,7 @@ public class InferenceQualifierHierarchy extends MultiGraphQualifierHierarchy {
 
         if (varAnnot == null) {
             throw new BugInCF(
-                    "VarAnnot not found in the list of top annotations: tops=" + PluginUtil.join(", ", tops));
+                    "VarAnnot not found in the list of top annotations: tops=" + SystemUtil.join(", ", tops));
         }
 
         if (tops.size() != 1) {
@@ -134,7 +132,9 @@ public class InferenceQualifierHierarchy extends MultiGraphQualifierHierarchy {
                 return anno;
             }
         }
+
         return null;
+
     }
 
     @Override
@@ -192,15 +192,15 @@ public class InferenceQualifierHierarchy extends MultiGraphQualifierHierarchy {
         if (InferenceMain.isHackMode((rhsVarAnnot == null || lhsAnnos == null))) {
                 InferenceMain.getInstance().logger.info(
                     "Hack:\n"
-                  + "    rhs=" + PluginUtil.join(", ", rhsAnnos) + "\n"
-                  + "    lhs=" + PluginUtil.join(", ", lhsAnnos ));
+                  + "    rhs=" + SystemUtil.join(", ", rhsAnnos) + "\n"
+                  + "    lhs=" + SystemUtil.join(", ", lhsAnnos ));
                 return true;
         }
 
         assert rhsVarAnnot != null && lhsVarAnnot != null :
                 "All types should have exactly 1 VarAnnot!\n"
-              + "    rhs=" + PluginUtil.join(", ", rhsAnnos) + "\n"
-              + "    lhs=" + PluginUtil.join(", ", lhsAnnos );
+              + "    rhs=" + SystemUtil.join(", ", rhsAnnos) + "\n"
+              + "    lhs=" + SystemUtil.join(", ", lhsAnnos );
 
         return isSubtype(rhsVarAnnot, lhsVarAnnot);
     }
@@ -223,6 +223,25 @@ public class InferenceQualifierHierarchy extends MultiGraphQualifierHierarchy {
         final Slot superSlot = slotMgr.getSlot(supertype);
 
         return constraintMgr.addSubtypeConstraintNoErrorMsg(subSlot, superSlot);
+    }
+
+    @Override
+    public Set<? extends AnnotationMirror> leastUpperBounds(
+            Collection<? extends AnnotationMirror> annos1,
+            Collection<? extends AnnotationMirror> annos2) {
+        if (InferenceMain.isHackMode(annos1.size() != annos2.size())) {
+            Set<AnnotationMirror> result = AnnotationUtils.createAnnotationSet();
+            for (AnnotationMirror a1 : annos1) {
+                for (AnnotationMirror a2 : annos2) {
+                    AnnotationMirror lub = leastUpperBound(a1, a2);
+                    if (lub != null) {
+                        result.add(lub);
+                    }
+                }
+            }
+            return result;
+        }
+        return super.leastUpperBounds(annos1, annos2);
     }
 
     @Override
