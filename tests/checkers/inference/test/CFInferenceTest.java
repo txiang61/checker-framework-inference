@@ -17,12 +17,12 @@ public abstract class CFInferenceTest extends CheckerFrameworkPerFileTest {
     public static final boolean isAtMost7Jvm;
 
     static {
-        isAtMost7Jvm = org.checkerframework.javacutil.PluginUtil.getJreVersion() <= 1.7d;
+        isAtMost7Jvm = org.checkerframework.javacutil.SystemUtil.getJreVersion() <= 1.7d;
     }
 
     public CFInferenceTest(File testFile, Class<? extends AbstractProcessor> checker,
-                           String checkerDir, String... checkerOptions) {
-        super(testFile, checker, checkerDir, checkerOptions);
+                           String testDir, String... checkerOptions) {
+        super(testFile, checker, testDir, checkerOptions);
     }
 
     public boolean useHacks() {
