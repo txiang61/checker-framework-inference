@@ -100,7 +100,6 @@ public abstract class Slot implements Comparable<Slot> {
         EXISTENTIAL_VARIABLE,
         COMB_VARIABLE,
         ARITHMETIC_VARIABLE,
-        COMPARABLE_VARIABLE,
         COMPARISON_VARIABLE,
         LUB_VARIABLE
     }

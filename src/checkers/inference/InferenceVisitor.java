@@ -38,7 +38,6 @@ import checkers.inference.model.VariableSlot;
 import checkers.inference.qual.VarAnnot;
 import checkers.inference.util.InferenceUtil;
 
-import com.sun.source.tree.BinaryTree;
 import com.sun.source.tree.CatchTree;
 import com.sun.source.tree.ExpressionTree;
 import com.sun.source.tree.MethodTree;
@@ -317,6 +316,7 @@ public class InferenceVisitor<Checker extends InferenceChecker,
         }
     }
 
+
     public void areComparable(AnnotatedTypeMirror ty1, AnnotatedTypeMirror ty2, String msgkey, Tree node) {
         if (infer) {
             final SlotManager slotManager = InferenceMain.getInstance().getSlotManager();
@@ -329,7 +329,7 @@ public class InferenceVisitor<Checker extends InferenceChecker,
             } else {
                 if (!InferenceMain.getInstance().isPerformingFlow()) {
                     logger.fine("InferenceVisitor::areComparable: Comparable constraint constructor invocation.");
-                	InferenceMain.getInstance().getConstraintManager().addComparableConstraint(el1, el2);
+                    InferenceMain.getInstance().getConstraintManager().addComparableConstraint(el1, el2);
                 }
             }
         } else {
