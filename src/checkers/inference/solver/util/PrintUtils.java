@@ -16,6 +16,7 @@ import checkers.inference.model.ArithmeticConstraint;
 import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
+import checkers.inference.model.ComparisonConstraint;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.EqualityConstraint;
@@ -246,8 +247,16 @@ public class PrintUtils {
 
         @Override
         public Void serialize(ComparableConstraint constraint) {
+            constraint.getFirst().serialize(this);
+            constraint.getSecond().serialize(this);
+            return null;
+        }
+        
+        @Override
+        public Void serialize(ComparisonConstraint constraint) {
             constraint.getLeft().serialize(this);
             constraint.getRight().serialize(this);
+            constraint.getResult().serialize(this);
             return null;
         }
 

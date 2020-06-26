@@ -17,7 +17,6 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import checkers.inference.InferenceMain;
-import checkers.inference.model.ComparableConstraint.ComparableOperationKind;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
@@ -111,7 +110,7 @@ public class JsonDeserializer {
                 } else if (COMP_CONSTRAINT_KEY.equals(constraintType)) {
                     Slot lhs = parseSlot((String) constraint.get(COMP_LHS));
                     Slot rhs = parseSlot((String) constraint.get(COMP_RHS));
-                    results.add(constraintManager.createComparableConstraint(ComparableOperationKind.OTHER, lhs, rhs));
+                    results.add(constraintManager.createComparableConstraint(lhs, rhs));
                 } else if (EXISTENTIAL_CONSTRAINT_KEY.equals(constraintType)) {
                     Slot potential = parseSlot((String) constraint.get(EXISTENTIAL_ID));
                     List<Constraint> thenConstraints =

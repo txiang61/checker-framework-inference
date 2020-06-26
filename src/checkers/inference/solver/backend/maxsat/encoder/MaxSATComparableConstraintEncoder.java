@@ -1,9 +1,8 @@
 package checkers.inference.solver.backend.maxsat.encoder;
 
-import checkers.inference.model.ComparableConstraint.ComparableOperationKind;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.VariableSlot;
-import checkers.inference.solver.backend.encoder.ComparableConstraintEncoder;
+import checkers.inference.solver.backend.encoder.binary.ComparableConstraintEncoder;
 import checkers.inference.solver.backend.maxsat.MathUtils;
 import checkers.inference.solver.backend.maxsat.VectorUtils;
 import checkers.inference.solver.frontend.Lattice;
@@ -20,9 +19,9 @@ public class MaxSATComparableConstraintEncoder extends MaxSATAbstractConstraintE
         super(lattice, typeToInt);
     }
 
-	@Override
-	public VecInt[] encodeVariable_Variable(ComparableOperationKind operation, VariableSlot fst, VariableSlot snd) {
-		// a <=> !b which is the same as (!a v !b) & (b v a)
+    @Override
+    public VecInt[] encodeVariable_Variable(VariableSlot fst, VariableSlot snd) {
+        // a <=> !b which is the same as (!a v !b) & (b v a)
         List<VecInt> list = new ArrayList<VecInt>();
         for (AnnotationMirror type : lattice.allTypes) {
             if (lattice.incomparableType.keySet().contains(type)) {
@@ -37,11 +36,11 @@ public class MaxSATComparableConstraintEncoder extends MaxSATAbstractConstraintE
         }
         VecInt[] result = list.toArray(new VecInt[list.size()]);
         return result;
-	}
+    }
 
-	@Override
-	public VecInt[] encodeVariable_Constant(ComparableOperationKind operation, VariableSlot fst, ConstantSlot snd) {
-		if (lattice.incomparableType.keySet().contains(snd.getValue())) {
+    @Override
+    public VecInt[] encodeVariable_Constant(VariableSlot fst, ConstantSlot snd) {
+        if (lattice.incomparableType.keySet().contains(snd.getValue())) {
             List<VecInt> resultList = new ArrayList<>();
             for (AnnotationMirror incomparable : lattice.incomparableType.get(snd.getValue())) {
                 // Should not be equal to incomparable
@@ -54,15 +53,10 @@ public class MaxSATComparableConstraintEncoder extends MaxSATAbstractConstraintE
         } else {
             return emptyValue;
         }
-	}
+    }
 
-	@Override
-	public VecInt[] encodeConstant_Variable(ComparableOperationKind operation, ConstantSlot fst, VariableSlot snd) {
-		return encodeVariable_Constant(operation, snd, fst);
-	}
-
-	@Override
-	public VecInt[] encodeConstant_Constant(ComparableOperationKind operation, ConstantSlot fst, ConstantSlot snd) {
-		return null;
-	}
+    @Override
+    public VecInt[] encodeConstant_Variable(ConstantSlot fst, VariableSlot snd) {
+        return encodeVariable_Constant(snd, fst);
+    }
 }

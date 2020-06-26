@@ -15,6 +15,7 @@ import checkers.inference.model.ArithmeticConstraint;
 import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
+import checkers.inference.model.ComparisonConstraint;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.EqualityConstraint;
@@ -199,9 +200,29 @@ public class ToStringSerializer implements Serializer<String, String> {
         showVerboseVars = false;
         final StringBuilder sb = new StringBuilder();
         sb.append(getCurrentIndentString())
-          .append(constraint.getLeft().serialize(this))
+          .append(constraint.getFirst().serialize(this))
           .append(" <~> ")
-          .append(constraint.getRight().serialize(this));
+          .append(constraint.getSecond().serialize(this));
+        showVerboseVars = prevShowVerboseVars;
+        return sb.toString();
+    }
+    
+    @Override
+    public String serialize(ComparisonConstraint constraint) {
+    	boolean prevShowVerboseVars = showVerboseVars;
+        showVerboseVars = false;
+        // format: result <= ( left comp right )
+        final StringBuilder sb = new StringBuilder();
+        sb.append(getCurrentIndentString())
+          .append(constraint.getResult().serialize(this))
+          .append(" <= ( ")
+          .append(constraint.getLeft().serialize(this))
+          .append(" ")
+          .append(constraint.getOperation().getSymbol())
+          .append(" ")
+          .append(constraint.getRight().serialize(this))
+          .append(" )");
+        optionallyFormatAstPath(constraint, sb);
         showVerboseVars = prevShowVerboseVars;
         return sb.toString();
     }

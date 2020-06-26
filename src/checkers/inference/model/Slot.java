@@ -51,6 +51,7 @@ public abstract class Slot {
         COMB_VARIABLE,
         ARITHMETIC_VARIABLE,
         COMPARABLE_VARIABLE,
+        COMPARISON_VARIABLE,
         LUB_VARIABLE
     }
 
