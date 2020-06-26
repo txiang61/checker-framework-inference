@@ -30,7 +30,6 @@ import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.type.TypeKind;
 import javax.lang.model.type.TypeMirror;
 
-import checkers.inference.model.ComparableConstraint.ComparableOperationKind;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.RefinementVariableSlot;
@@ -318,7 +317,6 @@ public class InferenceVisitor<Checker extends InferenceChecker,
         }
     }
 
-
     public void areComparable(AnnotatedTypeMirror ty1, AnnotatedTypeMirror ty2, String msgkey, Tree node) {
         if (infer) {
             final SlotManager slotManager = InferenceMain.getInstance().getSlotManager();
@@ -331,8 +329,7 @@ public class InferenceVisitor<Checker extends InferenceChecker,
             } else {
                 if (!InferenceMain.getInstance().isPerformingFlow()) {
                     logger.fine("InferenceVisitor::areComparable: Comparable constraint constructor invocation.");
-                	ComparableOperationKind opKind = ComparableOperationKind.fromTreeKind(node.getKind());
-                	InferenceMain.getInstance().getConstraintManager().addComparableConstraint(opKind, el1, el2);
+                	InferenceMain.getInstance().getConstraintManager().addComparableConstraint(el1, el2);
                 }
             }
         } else {

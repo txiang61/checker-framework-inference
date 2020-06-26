@@ -1,5 +1,6 @@
 package checkers.inference.solver.backend.encoder;
 
+import checkers.inference.solver.backend.encoder.binary.ComparableConstraintEncoder;
 import checkers.inference.solver.backend.encoder.binary.EqualityConstraintEncoder;
 import checkers.inference.solver.backend.encoder.binary.InequalityConstraintEncoder;
 import checkers.inference.solver.backend.encoder.binary.SubtypeConstraintEncoder;
@@ -18,6 +19,7 @@ import checkers.inference.solver.backend.encoder.preference.PreferenceConstraint
  *     <li>{@link EqualityConstraintEncoder}</li>
  *     <li>{@link InequalityConstraintEncoder}</li>
  *     <li>{@link ComparableConstraintEncoder}</li>
+ *     <li>{@link ComparisonConstraintEncoder}</li>
  *     <li>{@link PreferenceConstraintEncoder}</li>
  *     <li>{@link CombineConstraintEncoder}</li>
  *     <li>{@link ExistentialConstraintEncoder}</li>
@@ -39,6 +41,8 @@ public interface ConstraintEncoderFactory<ConstraintEncodingT> {
     InequalityConstraintEncoder<ConstraintEncodingT> createInequalityConstraintEncoder();
 
     ComparableConstraintEncoder<ConstraintEncodingT> createComparableConstraintEncoder();
+    
+    ComparisonConstraintEncoder<ConstraintEncodingT> createComparisonConstraintEncoder();
 
     PreferenceConstraintEncoder<ConstraintEncodingT> createPreferenceConstraintEncoder();
 

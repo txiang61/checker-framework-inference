@@ -22,9 +22,9 @@ public class ArithmeticConstraint extends Constraint {
         LEFT_SHIFT("<<"),
         RIGHT_SHIFT(">>"),
         UNSIGNED_RIGHT_SHIFT(">>>"),
-    	AND("&"),
-    	OR("|"),
-    	XOR("^");
+        AND("&"),
+        OR("|"),
+        XOR("^");
 
         // stores the symbol of the operation
         private final String opSymbol;
