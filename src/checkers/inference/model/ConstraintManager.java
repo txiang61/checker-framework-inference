@@ -239,7 +239,7 @@ public class ConstraintManager {
             add(constraint);
         }
     }
-    
+
     /**
      * Creates and adds a {@link ComparableConstraint} between the two slots to the constraint set,
      * which may be normalized to {@link AlwaysTrueConstraint}. An error is issued if the
