@@ -148,6 +148,7 @@ public abstract class AbstractFormatTranslator<SlotEncodingT, ConstraintEncoding
         equalityConstraintEncoder = encoderFactory.createEqualityConstraintEncoder();
         inequalityConstraintEncoder = encoderFactory.createInequalityConstraintEncoder();
         comparableConstraintEncoder = encoderFactory.createComparableConstraintEncoder();
+        comparisonConstraintEncoder = encoderFactory.createComparisonConstraintEncoder();
         preferenceConstraintEncoder = encoderFactory.createPreferenceConstraintEncoder();
         combineConstraintEncoder = encoderFactory.createCombineConstraintEncoder();
         existentialConstraintEncoder = encoderFactory.createExistentialConstraintEncoder();

@@ -2,6 +2,7 @@ package checkers.inference.solver.backend.z3smt;
 
 import checkers.inference.model.ArithmeticVariableSlot;
 import checkers.inference.model.CombVariableSlot;
+import checkers.inference.model.ComparisonVariableSlot;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.LubVariableSlot;
@@ -75,6 +76,11 @@ public abstract class Z3SmtFormatTranslator<SlotEncodingT, SlotSolutionT>
     
     @Override
     public SlotEncodingT serialize(ArithmeticVariableSlot slot) {
+        return serializeVarSlot(slot);
+    }
+    
+    @Override
+    public SlotEncodingT serialize(ComparisonVariableSlot slot) {
         return serializeVarSlot(slot);
     }
 

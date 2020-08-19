@@ -9,8 +9,15 @@ package checkers.inference.model;
  */
 public class ComparisonVariableSlot extends Slot {
 
-    public ComparisonVariableSlot(AnnotationLocation location, int id) {
+	private final Slot refined;
+	
+    public ComparisonVariableSlot(AnnotationLocation location, int id, Slot refined) {
         super(id, location);
+        this.refined = refined;
+    }
+
+    public Slot getRefined() {
+        return refined;
     }
 
     @Override
