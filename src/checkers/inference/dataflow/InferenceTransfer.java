@@ -1,8 +1,10 @@
 package checkers.inference.dataflow;
 
+import org.checkerframework.dataflow.analysis.FlowExpressions;
 import org.checkerframework.dataflow.analysis.RegularTransferResult;
 import org.checkerframework.dataflow.analysis.TransferInput;
 import org.checkerframework.dataflow.analysis.TransferResult;
+import org.checkerframework.dataflow.analysis.FlowExpressions.Receiver;
 import org.checkerframework.dataflow.cfg.node.AssignmentNode;
 import org.checkerframework.dataflow.cfg.node.FieldAccessNode;
 import org.checkerframework.dataflow.cfg.node.LocalVariableNode;
@@ -14,13 +16,16 @@ import org.checkerframework.framework.flow.CFTransfer;
 import org.checkerframework.framework.flow.CFValue;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.framework.type.AnnotatedTypeMirror.AnnotatedTypeVariable;
+import org.checkerframework.javacutil.AnnotationUtils;
 import org.checkerframework.javacutil.BugInCF;
 import org.checkerframework.javacutil.Pair;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.type.TypeKind;
 
 import com.sun.source.tree.CompoundAssignmentTree;
@@ -33,9 +38,11 @@ import checkers.inference.InferenceMain;
 import checkers.inference.SlotManager;
 import checkers.inference.VariableAnnotator;
 import checkers.inference.model.AnnotationLocation;
+import checkers.inference.model.ComparisonVariableSlot;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Slot;
+import checkers.inference.qual.VarAnnot;
 import checkers.inference.util.InferenceUtil;
 
 /**
@@ -201,8 +208,13 @@ public class InferenceTransfer extends CFTransfer {
             AnnotatedTypeMirror atm) {
 
         Slot slotToRefine = getInferenceAnalysis().getSlotManager().getVariableSlot(atm);
-        while (slotToRefine instanceof RefinementVariableSlot) {
-            slotToRefine = ((RefinementVariableSlot)slotToRefine).getRefined();
+        while (slotToRefine instanceof RefinementVariableSlot
+        		|| slotToRefine instanceof ComparisonVariableSlot) {
+        	if (slotToRefine instanceof RefinementVariableSlot) {
+        		slotToRefine = ((RefinementVariableSlot)slotToRefine).getRefined();
+        	} else if (slotToRefine instanceof ComparisonVariableSlot) {
+        		slotToRefine = ((ComparisonVariableSlot)slotToRefine).getRefined();
+        	}
         }
 
         logger.fine("Creating refinement variable for tree: " + assignmentTree);

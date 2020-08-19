@@ -153,7 +153,7 @@ public interface SlotManager {
      * @param thenBranch true if is for the then store, false if is for the else store
      * @return the ComparisonVariableSlot for the given location
      */
-	ComparisonVariableSlot createComparisonVariableSlot(AnnotationLocation location, boolean thenBranch);
+	ComparisonVariableSlot createComparisonVariableSlot(AnnotationLocation location, Slot refined, boolean thenBranch);
 
 	/**
      * Retrieves the ComparisonVariableSlot created for the given location if it has been previously

@@ -451,7 +451,7 @@ public class DefaultSlotManager implements SlotManager {
     }
     
     @Override
-    public ComparisonVariableSlot createComparisonVariableSlot(AnnotationLocation location, boolean thenBranch) {
+    public ComparisonVariableSlot createComparisonVariableSlot(AnnotationLocation location, Slot refined, boolean thenBranch) {
         if (location == null || location.getKind() == AnnotationLocation.Kind.MISSING) {
             throw new BugInCF(
                     "Cannot create an ComparisonVariableSlot with a missing annotation location.");
@@ -459,7 +459,7 @@ public class DefaultSlotManager implements SlotManager {
 
         // create the comparison var slot if it doesn't exist for the given location
         if (thenBranch && !comparisonThenSlotCache.containsKey(location)) {
-        	ComparisonVariableSlot slot = new ComparisonVariableSlot(location, nextId());
+        	ComparisonVariableSlot slot = new ComparisonVariableSlot(location, nextId(), refined);
             addToSlots(slot);
             comparisonThenSlotCache.put(location, slot.getId());
             return slot;
@@ -467,7 +467,7 @@ public class DefaultSlotManager implements SlotManager {
         
         // create the comparison var slot if it doesn't exist for the given location
         if (!thenBranch && !comparisonElseSlotCache.containsKey(location)) {
-        	ComparisonVariableSlot slot = new ComparisonVariableSlot(location, nextId());
+        	ComparisonVariableSlot slot = new ComparisonVariableSlot(location, nextId(), refined);
             addToSlots(slot);
             comparisonElseSlotCache.put(location, slot.getId());
             return slot;

@@ -8,6 +8,7 @@ import com.microsoft.z3.Expr;
 import checkers.inference.model.ArithmeticConstraint;
 import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
+import checkers.inference.model.ComparisonConstraint;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.EqualityConstraint;
 import checkers.inference.model.ExistentialConstraint;
@@ -52,6 +53,8 @@ public abstract class Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT> {
 
     protected abstract void encodeSoftComparableConstraint(ComparableConstraint constraint);
 
+    protected abstract void encodeSoftComparisonConstraint(ComparisonConstraint constraint);
+
     protected abstract void encodeSoftArithmeticConstraint(ArithmeticConstraint constraint);
 
     protected abstract void encodeSoftEqualityConstraint(EqualityConstraint constraint);
@@ -76,9 +79,13 @@ public abstract class Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT> {
             if (constraint instanceof SubtypeConstraint) {
             	encodeSoftSubtypeConstraint((SubtypeConstraint) constraint);
             }
-            // Generate soft constraint for comparison constraint
+            // Generate soft constraint for comparable constraint
             if (constraint instanceof ComparableConstraint) {
             	encodeSoftComparableConstraint((ComparableConstraint) constraint);
+            }
+            // Generate soft constraint for comparison constraint
+            if (constraint instanceof ComparisonConstraint) {
+            	encodeSoftComparisonConstraint((ComparisonConstraint) constraint);
             }
             // Generate soft constraint for arithmetic constraint
             if (constraint instanceof ArithmeticConstraint) {
