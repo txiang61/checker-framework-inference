@@ -349,7 +349,12 @@ public class DefaultSlotManager implements SlotManager {
             addToSlots(refinementVariableSlot);
         } else if (locationCache.containsKey(location)) {
             int id = locationCache.get(location);
-            refinementVariableSlot = (RefinementVariableSlot) getSlot(id);
+            if (getSlot(id) instanceof RefinementVariableSlot) {
+            	refinementVariableSlot = (RefinementVariableSlot) getSlot(id);
+            } else {
+            	refinementVariableSlot = new RefinementVariableSlot(location, nextId(), refined);
+                addToSlots(refinementVariableSlot);
+            }
         } else {
             refinementVariableSlot = new RefinementVariableSlot(location, nextId(), refined);
             addToSlots(refinementVariableSlot);
