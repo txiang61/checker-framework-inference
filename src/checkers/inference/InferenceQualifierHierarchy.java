@@ -221,6 +221,11 @@ public class InferenceQualifierHierarchy extends MultiGraphQualifierHierarchy {
 
         final Slot subSlot   = slotMgr.getSlot(subtype);
         final Slot superSlot = slotMgr.getSlot(supertype);
+        
+        // TODO: remove hack
+        if (subSlot == null || superSlot == null) {
+        	return true;
+        }
 
         return constraintMgr.addSubtypeConstraintNoErrorMsg(subSlot, superSlot);
     }
