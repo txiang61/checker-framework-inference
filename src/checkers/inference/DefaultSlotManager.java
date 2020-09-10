@@ -245,6 +245,9 @@ public class DefaultSlotManager implements SlotManager {
      */
     @Override
     public Slot getSlot( final AnnotationMirror annotationMirror ) {
+    	if (annotationMirror == null) {
+    		return null;
+    	}
 
         final int id;
         if (InferenceQualifierHierarchy.isVarAnnot(annotationMirror)) {

@@ -38,6 +38,7 @@ import checkers.inference.InferenceMain;
 import checkers.inference.SlotManager;
 import checkers.inference.VariableAnnotator;
 import checkers.inference.model.AnnotationLocation;
+import checkers.inference.model.ComparisonVariableSlot;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Slot;
@@ -207,8 +208,13 @@ public class InferenceTransfer extends CFTransfer {
             AnnotatedTypeMirror atm) {
 
         Slot slotToRefine = getInferenceAnalysis().getSlotManager().getVariableSlot(atm);
-        while (slotToRefine instanceof RefinementVariableSlot) {
-            slotToRefine = ((RefinementVariableSlot)slotToRefine).getRefined();
+        while (slotToRefine instanceof RefinementVariableSlot
+        		|| slotToRefine instanceof ComparisonVariableSlot) {
+        	if (slotToRefine instanceof RefinementVariableSlot) {
+        		slotToRefine = ((RefinementVariableSlot)slotToRefine).getRefined();
+        	} else if (slotToRefine instanceof ComparisonVariableSlot) {
+        		slotToRefine = ((ComparisonVariableSlot)slotToRefine).getRefined();
+        	}
         }
 
         logger.fine("Creating refinement variable for tree: " + assignmentTree);
