@@ -278,7 +278,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
                 .<Slot, Set<? extends AnnotationMirror>> of(constantSlot,
                         annotations);
         treeToVarAnnoPair.put(tree, varATMPair);
-        logger.fine("Created variable for tree:\n" + constantSlot.getId() + " => " + tree);
+        logger.fine("Created constant for tree:\n" + constantSlot.getId() + " => " + tree);
         return constantSlot;
     }
 
