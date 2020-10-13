@@ -245,6 +245,9 @@ public class DefaultSlotManager implements SlotManager {
      */
     @Override
     public Slot getSlot( final AnnotationMirror annotationMirror ) {
+    	if (annotationMirror == null) {
+    		return null;
+    	}
 
         final int id;
         if (InferenceQualifierHierarchy.isVarAnnot(annotationMirror)) {
@@ -349,7 +352,12 @@ public class DefaultSlotManager implements SlotManager {
             addToSlots(refinementVariableSlot);
         } else if (locationCache.containsKey(location)) {
             int id = locationCache.get(location);
-            refinementVariableSlot = (RefinementVariableSlot) getSlot(id);
+            if (getSlot(id) instanceof RefinementVariableSlot) {
+            	refinementVariableSlot = (RefinementVariableSlot) getSlot(id);
+            } else {
+            	refinementVariableSlot = new RefinementVariableSlot(location, nextId(), refined);
+                addToSlots(refinementVariableSlot);
+            }
         } else {
             refinementVariableSlot = new RefinementVariableSlot(location, nextId(), refined);
             addToSlots(refinementVariableSlot);
