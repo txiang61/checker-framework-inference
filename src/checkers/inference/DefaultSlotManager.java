@@ -120,9 +120,8 @@ public class DefaultSlotManager implements SlotManager {
         arithmeticSlotCache = new LinkedHashMap<>();
 
         if (storeConstants) {
-            @SuppressWarnings("deprecation") // replace getTypeQualifiers
-            Set<? extends AnnotationMirror> mirrors = InferenceMain.getInstance().getRealTypeFactory().getQualifierHierarchy().getTypeQualifiers();
-            for (AnnotationMirror am : mirrors) {
+            for (Class<? extends Annotation> annoClass : this.realQualifiers) {
+                AnnotationMirror am = new AnnotationBuilder(processingEnvironment, annoClass).build();
                 ConstantSlot constantSlot = new ConstantSlot(am, nextId());
                 addToSlots(constantSlot);
                 constantCache.put(am, constantSlot.getId());
@@ -314,18 +313,26 @@ public class DefaultSlotManager implements SlotManager {
     }
 
     @Override
-    public RefinementVariableSlot createRefinementVariableSlot(AnnotationLocation location, Slot refined) {
-        RefinementVariableSlot refinementVariableSlot;
-        if (location.getKind() == AnnotationLocation.Kind.MISSING) {
-            //Don't cache slot for MISSING LOCATION. Just create a new one and return.
-            refinementVariableSlot = new RefinementVariableSlot(location, nextId(), refined);
-            addToSlots(refinementVariableSlot);
-        } else if (locationCache.containsKey(location)) {
+    public RefinementVariableSlot createRefinementVariableSlot(AnnotationLocation location, Slot declarationSlot, Slot valueSlot) {
+        // If the location is already cached, return the corresponding refinement slot in the cache
+        if (locationCache.containsKey(location)) {
             int id = locationCache.get(location);
-            refinementVariableSlot = (RefinementVariableSlot) getSlot(id);
-        } else {
-            refinementVariableSlot = new RefinementVariableSlot(location, nextId(), refined);
-            addToSlots(refinementVariableSlot);
+            return (RefinementVariableSlot) getSlot(id);
+        }
+
+        // Create new refinement variable slot, as well as the equality constraint to the value slot
+        RefinementVariableSlot refinementVariableSlot;
+        refinementVariableSlot = new RefinementVariableSlot(location, nextId(), declarationSlot);
+        addToSlots(refinementVariableSlot);
+        if (valueSlot != null) {
+            // If the rhs value slot passed in is non-null, create the equality constraint on it
+            InferenceMain.getInstance().getConstraintManager().addEqualityConstraint(refinementVariableSlot, valueSlot);
+        }
+
+        // Only cache slot for non-MISSING LOCATION
+        // TODO: We should always create refinement variable on a non-missing location,
+        //  and remove this if-condition
+        if (location.getKind() != AnnotationLocation.Kind.MISSING) {
             locationCache.put(location, refinementVariableSlot.getId());
         }
         return refinementVariableSlot;
