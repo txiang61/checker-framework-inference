@@ -298,14 +298,14 @@ public class ConstraintNormalizer {
             if (alwaysExists) {
                 sb.append("[");
                 sb.append(
-                        slot.isVariable() ? (slot).getId()
+                        slot.isVariable() ? slot.getId()
                                           : ((ConstantSlot) slot).getValue());
                 sb.append("]");
             } else {
                 if (!exists) {
                     sb.append("!");
                 }
-                sb.append((slot).getId());
+                sb.append(slot.getId());
             }
             return sb.toString();
         }
@@ -333,7 +333,7 @@ public class ConstraintNormalizer {
                 }
             }
 
-            return (o1).getId() - (o2).getId();
+            return o1.getId() - o2.getId();
         }
     }
 
