@@ -48,10 +48,8 @@ import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.TypeVariable;
 
 import checkers.inference.dataflow.InferenceAnalysis;
-import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 import checkers.inference.qual.VarAnnot;
 import checkers.inference.util.ConstantToVariableAnnotator;
 import checkers.inference.util.InferenceUtil;
@@ -124,7 +122,7 @@ public class InferenceAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
     // though we know the value of that variable.  In this case, rather than creating a new variable
     // for every one of these locations and increase the number of variables we solve for, use
     // the same variable slot for all of these locations.  This map contains those variables.
-    private Map<Class<? extends Annotation>, VariableSlot> constantToVarAnnot = new HashMap<>();
+    private Map<Class<? extends Annotation>, Slot> constantToVarAnnot = new HashMap<>();
 
     public InferenceAnnotatedTypeFactory(
             InferenceChecker inferenceChecker,
@@ -265,7 +263,7 @@ public class InferenceAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
         return null;
     }
 
-    protected Map<Class<? extends Annotation>, VariableSlot> getConstantVars() {
+    protected Map<Class<? extends Annotation>, Slot> getConstantVars() {
         return Collections.unmodifiableMap(constantToVarAnnot);
     }
 

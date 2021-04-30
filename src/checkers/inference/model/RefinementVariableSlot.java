@@ -58,7 +58,7 @@ package checkers.inference.model;
  *  Essentially, RefinementVariableSlots allow us to generate constraints as if the code were written in
  *  SSA form ( http://en.wikipedia.org/wiki/Static_single_assignment_form ).
  */
-public class RefinementVariableSlot extends Slot {
+public class RefinementVariableSlot extends VariableSlot {
 
     private final Slot refined;
 

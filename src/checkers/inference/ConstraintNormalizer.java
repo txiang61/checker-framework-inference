@@ -18,7 +18,6 @@ import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 
 /**
  * This class currently just removes ExistentialVariables from the set of constraints

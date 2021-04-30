@@ -10,7 +10,6 @@ import javax.lang.model.element.AnnotationMirror;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 import checkers.inference.solver.frontend.Lattice;
 import checkers.inference.solver.util.SolverEnvironment;
 

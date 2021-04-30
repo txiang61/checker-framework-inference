@@ -22,7 +22,6 @@ import checkers.inference.InferenceOptions.InitStatus;
 import checkers.inference.model.AnnotationLocation;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.ConstraintManager;
-import checkers.inference.model.Slot;
 import checkers.inference.model.VariableSlot;
 import checkers.inference.qual.VarAnnot;
 import checkers.inference.util.InferenceUtil;
@@ -219,7 +218,7 @@ public class InferenceMain {
         try (PrintWriter writer
                 = new PrintWriter(new FileOutputStream(InferenceOptions.jaifFile))) {
 
-            List<Slot> varSlots = slotManager.getVariableSlots();
+            List<VariableSlot> varSlots = slotManager.getVariableSlots();
             Map<AnnotationLocation, String> values = new HashMap<>();
             Set<Class<? extends Annotation>> annotationClasses = new HashSet<>();
 
@@ -234,7 +233,7 @@ public class InferenceMain {
                     annotationClasses.add(annotation);
                 }
             }
-            for (Slot slot : varSlots) {
+            for (VariableSlot slot : varSlots) {
                 if (slot.getLocation() != null && slot.isInsertable()
                  && (solverResult == null || solverResult.containsSolutionForVariable(slot.getId()))) {
                     // TODO: String serialization of annotations.

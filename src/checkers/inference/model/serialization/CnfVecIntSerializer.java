@@ -26,7 +26,7 @@ import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Serializer;
 import checkers.inference.model.Slot;
 import checkers.inference.model.SubtypeConstraint;
-import checkers.inference.model.VariableSlot;
+import checkers.inference.model.SourceVariableSlot;
 
 /**
  */
@@ -217,7 +217,7 @@ public abstract class CnfVecIntSerializer implements Serializer<VecInt[], VecInt
     }
 
     @Override
-    public VecInt[] serialize(VariableSlot slot) {
+    public VecInt[] serialize(SourceVariableSlot slot) {
         // doesn't really mean anything
         return null;
     }

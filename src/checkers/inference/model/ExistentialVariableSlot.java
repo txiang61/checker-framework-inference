@@ -48,7 +48,7 @@ package checkers.inference.model;
  * }
  * }
  */
-public class ExistentialVariableSlot extends Slot {
+public class ExistentialVariableSlot extends VariableSlot {
 
     // a variable whose annotation may or may not exist in source code
     private final Slot potentialSlot;
@@ -58,7 +58,6 @@ public class ExistentialVariableSlot extends Slot {
 
     public ExistentialVariableSlot(int id, Slot potentialSlot, Slot alternativeSlot) {
         super(id);
-        setInsertable(false);
 
         if (potentialSlot == null) {
             throw new IllegalArgumentException("PotentialSlot cannot be null\n"
@@ -74,6 +73,11 @@ public class ExistentialVariableSlot extends Slot {
 
         this.potentialSlot = potentialSlot;
         this.alternativeSlot = alternativeSlot;
+    }
+
+    @Override
+    public boolean isInsertable() {
+        return false;
     }
 
     @Override

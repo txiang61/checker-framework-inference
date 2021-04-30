@@ -16,6 +16,7 @@ import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Slot;
 import checkers.inference.model.VariableSlot;
+import checkers.inference.model.SourceVariableSlot;
 
 /**
  * SlotManager stores variables for later access, provides ids for creating variables and
@@ -41,7 +42,7 @@ public interface SlotManager {
      *            used to locate this variable in code
      * @return VariableSlot that corresponds to this location
      */
-    VariableSlot createVariableSlot(AnnotationLocation location, TypeMirror type);
+    SourceVariableSlot createSourceVariableSlot(AnnotationLocation location, TypeMirror type);
 
     /**
      * Create new RefinementVariableSlot (as well as the refinement constraint if
@@ -184,11 +185,11 @@ public interface SlotManager {
     Slot getSlot( AnnotationMirror am );
 
     /**
-     * Return the VariableSlot in the primary annotation location of annotated type mirror.  If
-     * there is no VariableSlot this method throws an exception
+     * Return the Slot in the primary annotation location of annotated type mirror.  If
+     * there is no Slot this method throws an exception
      * @param atm An annotated type mirror with a VarAnnot in its primary annotations list
      */
-    Slot getVariableSlot(AnnotatedTypeMirror atm);
+    Slot getSlot(AnnotatedTypeMirror atm);
 
     /**
      * Return all slots collected by this SlotManager
@@ -200,7 +201,7 @@ public interface SlotManager {
      * Return all VariableSlots collected by this SlotManager
      * @return a lit of VariableSlots
      */
-    List<Slot> getVariableSlots();
+    List<VariableSlot> getVariableSlots();
 
     List<ConstantSlot> getConstantSlots();
 }

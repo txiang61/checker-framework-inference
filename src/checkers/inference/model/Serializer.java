@@ -26,7 +26,7 @@ public interface Serializer<S, T> {
 
     T serialize(InequalityConstraint constraint);
 
-    S serialize(VariableSlot slot);
+    S serialize(SourceVariableSlot slot);
 
     S serialize(ConstantSlot slot);
 

@@ -4,7 +4,6 @@ import checkers.inference.InferenceMain;
 import checkers.inference.SlotManager;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
 import org.checkerframework.framework.type.AnnotatedTypeMirror;
 import org.checkerframework.framework.type.AbstractViewpointAdapter;
@@ -23,12 +22,12 @@ public class InferenceViewpointAdapter extends AbstractViewpointAdapter {
 
     @Override
     protected AnnotationMirror extractAnnotationMirror(AnnotatedTypeMirror atm) {
-        final Slot varSlot = slotManager.getVariableSlot(atm);
-        if (varSlot == null && !InferenceMain.isHackMode()) {
+        final Slot slot = slotManager.getSlot(atm);
+        if (slot == null && !InferenceMain.isHackMode()) {
             throw new BugInCF(atm + " doesn't contain a slot");
         }
 
-        return varSlot == null ? null : slotManager.getAnnotation(varSlot);
+        return slot == null ? null : slotManager.getAnnotation(slot);
     }
 
     @Override

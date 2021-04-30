@@ -30,6 +30,7 @@ import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Slot;
+import checkers.inference.model.SourceVariableSlot;
 import checkers.inference.model.VariableSlot;
 import checkers.inference.qual.VarAnnot;
 
@@ -198,7 +199,7 @@ public class DefaultSlotManager implements SlotManager {
      * @inheritDoc
      */
     @Override
-    public Slot getVariableSlot( final AnnotatedTypeMirror atm ) {
+    public Slot getSlot( final AnnotatedTypeMirror atm ) {
 
         AnnotationMirror annot = atm.getAnnotationInHierarchy(this.varAnnot);
         if (annot == null) {
@@ -265,11 +266,11 @@ public class DefaultSlotManager implements SlotManager {
      * @inheritDoc
      */
     @Override
-    public List<Slot> getVariableSlots() {
-        List<Slot> varSlots = new ArrayList<>();
+    public List<VariableSlot> getVariableSlots() {
+        List<VariableSlot> varSlots = new ArrayList<>();
         for (Slot slot : slots.values()) {
             if (slot.isVariable()) {
-                varSlots.add(slot);
+                varSlots.add((VariableSlot) slot);
             }
         }
         return varSlots;
@@ -282,7 +283,7 @@ public class DefaultSlotManager implements SlotManager {
     public List<ConstantSlot> getConstantSlots() {
         List<ConstantSlot> constants = new ArrayList<>();
         for (Slot slot : slots.values()) {
-            if (slot.isConstant()) {
+            if (!slot.isVariable()) {
                 constants.add((ConstantSlot) slot);
             }
         }
@@ -295,21 +296,21 @@ public class DefaultSlotManager implements SlotManager {
     }
 
     @Override
-    public VariableSlot createVariableSlot(AnnotationLocation location, TypeMirror type) {
-        VariableSlot variableSlot;
+    public SourceVariableSlot createSourceVariableSlot(AnnotationLocation location, TypeMirror type) {
+        SourceVariableSlot sourceVarSlot;
         if (location.getKind() == AnnotationLocation.Kind.MISSING) {
             //Don't cache slot for MISSING LOCATION. Just create a new one and return.
-            variableSlot = new VariableSlot(location, nextId(), type);
-            addToSlots(variableSlot);
+            sourceVarSlot = new SourceVariableSlot(location, nextId(), type);
+            addToSlots(sourceVarSlot);
         } else if (locationCache.containsKey(location)) {
             int id = locationCache.get(location);
-            variableSlot = (VariableSlot) getSlot(id);
+            sourceVarSlot = (SourceVariableSlot) getSlot(id);
         } else {
-            variableSlot = new VariableSlot(location, nextId(), type);
-            addToSlots(variableSlot);
-            locationCache.put(location, variableSlot.getId());
+            sourceVarSlot = new SourceVariableSlot(location, nextId(), type);
+            addToSlots(sourceVarSlot);
+            locationCache.put(location, sourceVarSlot.getId());
         }
-        return variableSlot;
+        return sourceVarSlot;
     }
 
     @Override

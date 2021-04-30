@@ -21,7 +21,7 @@ import checkers.inference.InferenceMain;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
+import checkers.inference.model.SourceVariableSlot;
 import static checkers.inference.model.serialization.JsonSerializer.COMP_CONSTRAINT_KEY;
 import static checkers.inference.model.serialization.JsonSerializer.CONSTRAINTS_KEY;
 import static checkers.inference.model.serialization.JsonSerializer.CONSTRAINT_KEY;
@@ -205,7 +205,7 @@ public class JsonDeserializer {
     private Slot parseSlot(String slot) {
         if (slot.startsWith(VAR_PREFIX)) {
             int id = Integer.valueOf(slot.split(":")[1]);
-            return new VariableSlot(id, null);
+            return new SourceVariableSlot(id, null);
         } else {
             // TODO: THIS NEEDS FIXING
             AnnotationMirror value = annotationSerializer.deserialize(slot);

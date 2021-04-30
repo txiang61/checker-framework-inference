@@ -1,8 +1,5 @@
 package checkers.inference.model;
 
-import javax.lang.model.type.TypeMirror;
-
-import org.checkerframework.javacutil.AnnotationUtils;
 
 /**
  * VariableSlot is a Slot representing an undetermined value (i.e. a variable we are solving for).
@@ -21,54 +18,70 @@ import org.checkerframework.javacutil.AnnotationUtils;
  * Variable slot hold references to slots it is refined by, and slots it is merged to.
  *
  */
-public class VariableSlot extends Slot {
-
-    /** Actual type wrapped with this TypeMirror. */
-    protected final TypeMirror actualType;
+public abstract class VariableSlot extends Slot {
 
     /**
-     * @param location Used to locate this variable in code, see @AnnotationLocation
-     * @param id      Unique identifier for this variable
-     * @param type the underlying type
+     * Used to locate this Slot in source code. ASTRecords are written to Jaif files along with the
+     * Annotation determined for this slot by the Solver.
      */
-    public VariableSlot(AnnotationLocation location, int id, TypeMirror type) {
-        super(id, location);
-        this.actualType = type;
-    }
+    private AnnotationLocation location;
 
     /**
-     * @param location Used to locate this variable in code, see @AnnotationLocation
-     * @param id      Unique identifier for this variable
-     */
-    public VariableSlot(int id, TypeMirror type) {
-        super(id);
-        this.actualType = type;
-    }
-
-    @Override
-    public <S, T> S serialize(Serializer<S, T> serializer) {
-        return serializer.serialize(this);
-    }
-
-    @Override
-    public Kind getKind() {
-        return Kind.VARIABLE;
-    }
-
-    /**
-     * Returns the underlying unannotated Java type, which this wraps.
+     * Create a Slot with the given annotation location.
      *
-     * @return the underlying type
+     * @param id Unique identifier for this variable
+     * @param location an AnnotationLocation for which the slot is attached to
      */
-    public TypeMirror getUnderlyingType() {
-        return actualType;
+    public VariableSlot(int id, AnnotationLocation location) {
+        super(id);
+        this.location = location;
     }
 
     /**
-     * Should this VariableSlot be inserted back into the source code.
+     * Create a slot with a default location of
+     * {@link AnnotationLocation#MISSING_LOCATION}.
+     *
+     * @param id Unique identifier for this variable
      */
+    public VariableSlot(int id) {
+        this(id, AnnotationLocation.MISSING_LOCATION);
+    }
+
+    public AnnotationLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(AnnotationLocation location) {
+        this.location = location;
+    }
+
     @Override
-    public boolean isInsertable() {
+    public boolean isVariable() {
+        return false;
+    }
+
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + "(" + id + ")";
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Slot other = (Slot) obj;
+        if (id != other.id)
+            return false;
         return true;
     }
+
 }

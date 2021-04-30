@@ -26,8 +26,8 @@ import checkers.inference.model.PreferenceConstraint;
 import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Serializer;
 import checkers.inference.model.Slot;
+import checkers.inference.model.SourceVariableSlot;
 import checkers.inference.model.SubtypeConstraint;
-import checkers.inference.model.VariableSlot;
 
 /**
  *
@@ -218,7 +218,7 @@ public class JsonSerializer implements Serializer<String, JSONObject> {
     }
 
     @Override
-    public String serialize(VariableSlot slot) {
+    public String serialize(SourceVariableSlot slot) {
         return serializeSlot(slot);
     }
 

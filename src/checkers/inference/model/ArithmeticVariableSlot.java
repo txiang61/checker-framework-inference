@@ -4,7 +4,7 @@ package checkers.inference.model;
  * ArithmeticVariableSlot represent the result of an arithmetic operation between two other
  * {@link Slot}s. Note that this slot is serialized identically to a {@link Slot}.
  */
-public class ArithmeticVariableSlot extends Slot {
+public class ArithmeticVariableSlot extends VariableSlot {
 
     public ArithmeticVariableSlot(AnnotationLocation location, int id) {
         super(id, location);

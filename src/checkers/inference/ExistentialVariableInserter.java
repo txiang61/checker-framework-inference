@@ -18,7 +18,6 @@ import javax.lang.model.element.AnnotationMirror;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 
 /**
  *
@@ -132,7 +131,7 @@ public class ExistentialVariableInserter {
         }
 
         public void matchAndReplacePrimary(final AnnotatedTypeMirror typeUse, final AnnotatedTypeMirror declaration) {
-            if (InferenceMain.isHackMode(slotManager.getVariableSlot(typeUse) == null)) {
+            if (InferenceMain.isHackMode(slotManager.getSlot(typeUse) == null)) {
                 return;
             }
 
@@ -140,8 +139,8 @@ public class ExistentialVariableInserter {
                 typeUse.addAnnotation(realTop);
             }
 
-            if (slotManager.getVariableSlot(typeUse).equals(potentialVariable)) {
-                final Slot declSlot = slotManager.getVariableSlot(declaration);
+            if (slotManager.getSlot(typeUse).equals(potentialVariable)) {
+                final Slot declSlot = slotManager.getSlot(declaration);
 
                 if (declSlot == null) {
                     if (!InferenceMain.isHackMode()) {
@@ -276,12 +275,12 @@ public class ExistentialVariableInserter {
                 return false;
             }
 
-            Slot varSlot = slotManager.getVariableSlot(type);
-            if (varSlot == null) {
+            Slot slot = slotManager.getSlot(type);
+            if (slot == null) {
                 return false;
             }
 
-            return varSlot.equals(potentialVariable);
+            return slot.equals(potentialVariable);
         }
     }
 }

@@ -28,7 +28,6 @@ import checkers.inference.model.EqualityConstraint;
 import checkers.inference.model.Slot;
 import checkers.inference.model.Slot.Kind;
 import checkers.inference.model.SubtypeConstraint;
-import checkers.inference.model.VariableSlot;
 import sparta.checkers.qual.Sink;
 import sparta.checkers.qual.Source;
 
@@ -176,7 +175,7 @@ public abstract class IFlowSolver implements InferenceSolver {
             }
             return getFlowSet(slot.getId());
 
-        } else if (slot.isConstant()) {
+        } else if (!slot.isVariable()) {
             Set<String> constantSet = new HashSet<>();
             for (Entry<? extends ExecutableElement, ? extends AnnotationValue> entry :
                     ((ConstantSlot) slot).getValue().getElementValues().entrySet()) {
