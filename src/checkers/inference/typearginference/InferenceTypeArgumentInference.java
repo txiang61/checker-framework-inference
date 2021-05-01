@@ -42,7 +42,6 @@ import checkers.inference.VariableSlotReplacer;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 import checkers.inference.util.CrossFactoryAtmCopier;
 import checkers.inference.util.InferenceUtil;
 
@@ -203,7 +202,7 @@ public class InferenceTypeArgumentInference extends DefaultTypeArgumentInference
                 upperBoundVariable  = ((ExistentialVariableSlot) upperBoundVariable).getPotentialSlot();
             }
 
-            Slot lowerBoundVariable = slotManager.getVariableSlot(lowerBound);
+            Slot lowerBoundVariable = slotManager.getSlot(lowerBound);
 
             Slot newSlot = targetToPrimary.get(target);
             variableSlotReplacer.addReplacement(upperBoundVariable, newSlot);

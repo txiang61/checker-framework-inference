@@ -12,7 +12,6 @@ import javax.lang.model.element.AnnotationMirror;
 
 import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 
 /**
  * Given a set of replacement mappings (oldSlot -> newSlot),
@@ -104,7 +103,7 @@ public class VariableSlotReplacer {
             if (anno != null) {
                 Slot variable = slotManager.getSlot(anno);
 
-                if (slotManager.getVariableSlot(type).equals(replacement.oldSlot)) {
+                if (slotManager.getSlot(type).equals(replacement.oldSlot)) {
                     final AnnotationMirror newAnnotation = slotManager.getAnnotation(replacement.newSlot);
                     type.replaceAnnotation(newAnnotation);
 

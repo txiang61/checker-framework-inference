@@ -19,6 +19,7 @@ import checkers.inference.model.Constraint;
 import checkers.inference.model.ExistentialConstraint;
 import checkers.inference.model.Slot;
 import checkers.inference.model.SubtypeConstraint;
+import checkers.inference.model.VariableSlot;
 import dataflow.DataflowVisitor;
 import dataflow.util.DataflowUtils;
 
@@ -141,8 +142,9 @@ public class GraphBuilder {
                             }
                         }
                     } else {
-                        if (next.getSlot().getLocation() != null) {
-                            if (next.getSlot().getLocation().getKind().equals(Kind.MISSING)) {
+                        VariableSlot slot = (VariableSlot) next.getSlot();
+                        if (slot.getLocation() != null) {
+                            if (slot.getLocation().getKind().equals(Kind.MISSING)) {
                                 continue;
                             }
                         }

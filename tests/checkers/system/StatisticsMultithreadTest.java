@@ -158,6 +158,16 @@ public class StatisticsMultithreadTest extends TestCase {
         public Kind getKind() {
             return null;
         }
+
+        @Override
+        public boolean isInsertable() {
+            return false;
+        }
+
+        @Override
+        public boolean isVariable() {
+            return false;
+        }
     }
 
     private class DummyTwoSlot extends Slot {
@@ -173,6 +183,16 @@ public class StatisticsMultithreadTest extends TestCase {
         @Override
         public Kind getKind() {
             return null;
+        }
+
+        @Override
+        public boolean isInsertable() {
+            return false;
+        }
+
+        @Override
+        public boolean isVariable() {
+            return false;
         }
     }
 

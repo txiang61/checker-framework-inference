@@ -29,6 +29,7 @@ import checkers.inference.model.PreferenceConstraint;
 import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Serializer;
 import checkers.inference.model.Slot;
+import checkers.inference.model.SourceVariableSlot;
 import checkers.inference.model.SubtypeConstraint;
 import checkers.inference.model.VariableSlot;
 import checkers.inference.model.serialization.ToStringSerializer;
@@ -160,7 +161,9 @@ public class PrintUtils {
             stream.println(toStringSerializer.getCurrentIndentString()
                     + slot.serialize(toStringSerializer) + " : "
                     + slot.getClass().getSimpleName());
-            stream.println("\t" + slot.getLocation());
+            if (slot instanceof VariableSlot) {
+                stream.println("\t" + ((VariableSlot) slot).getLocation());
+            }
         }
 
         stream.println("=========================================================");
@@ -290,7 +293,7 @@ public class PrintUtils {
         }
 
         @Override
-        public Void serialize(VariableSlot slot) {
+        public Void serialize(SourceVariableSlot slot) {
             addSlotIfNotAdded(slot);
             return null;
         }

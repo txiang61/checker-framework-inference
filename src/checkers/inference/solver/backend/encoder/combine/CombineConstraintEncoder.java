@@ -2,6 +2,7 @@ package checkers.inference.solver.backend.encoder.combine;
 
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Slot;
+import checkers.inference.model.VariableSlot;
 
 /**
  * Interface that defines operations to encode a {@link checkers.inference.model.CombineConstraint}. It has four methods
@@ -18,11 +19,11 @@ import checkers.inference.model.Slot;
  */
 public interface CombineConstraintEncoder<ConstraintEncodingT> {
 
-    ConstraintEncodingT encodeVariable_Variable(Slot target, Slot declared, Slot result);
+    ConstraintEncodingT encodeVariable_Variable(VariableSlot target, VariableSlot declared, Slot result);
 
-    ConstraintEncodingT encodeVariable_Constant(Slot target, ConstantSlot declared, Slot result);
+    ConstraintEncodingT encodeVariable_Constant(VariableSlot target, ConstantSlot declared, Slot result);
 
-    ConstraintEncodingT encodeConstant_Variable(ConstantSlot target, Slot declared, Slot result);
+    ConstraintEncodingT encodeConstant_Variable(ConstantSlot target, VariableSlot declared, Slot result);
 
     ConstraintEncodingT encodeConstant_Constant(ConstantSlot target, ConstantSlot declared, Slot result);
 }

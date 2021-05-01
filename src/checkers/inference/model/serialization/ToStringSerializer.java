@@ -28,6 +28,7 @@ import checkers.inference.model.PreferenceConstraint;
 import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Serializer;
 import checkers.inference.model.Slot;
+import checkers.inference.model.SourceVariableSlot;
 import checkers.inference.model.SubtypeConstraint;
 import checkers.inference.model.VariableSlot;
 
@@ -297,7 +298,7 @@ public class ToStringSerializer implements Serializer<String, String> {
     }
 
     @Override
-    public String serialize(VariableSlot slot) {
+    public String serialize(SourceVariableSlot slot) {
         final StringBuilder sb = new StringBuilder();
         sb.append(slot.getId());
         optionallyShowVerbose(slot, sb);
@@ -377,14 +378,14 @@ public class ToStringSerializer implements Serializer<String, String> {
         }
     }
 
-    private void optionallyShowVerbose(final Slot varSlot, final StringBuilder sb) {
+    private void optionallyShowVerbose(final VariableSlot slot, final StringBuilder sb) {
         if (showVerboseVars) {
-            formatMerges(varSlot, sb);
-            optionallyFormatAstPath(varSlot, sb);
+            formatMerges(slot, sb);
+            optionallyFormatAstPath(slot, sb);
         }
     }
 
-    private void optionallyFormatAstPath(final Slot varSlot, final StringBuilder sb) {
+    private void optionallyFormatAstPath(final VariableSlot varSlot, final StringBuilder sb) {
         if (showAstPaths && (varSlot.isInsertable() || (varSlot.getLocation() != null))) {
             sb.append("\n")
               .append(getCurrentIndentString())

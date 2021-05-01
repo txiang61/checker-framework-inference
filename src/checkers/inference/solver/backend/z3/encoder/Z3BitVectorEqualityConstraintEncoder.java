@@ -2,6 +2,7 @@ package checkers.inference.solver.backend.z3.encoder;
 
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Slot;
+import checkers.inference.model.VariableSlot;
 import checkers.inference.solver.backend.encoder.binary.EqualityConstraintEncoder;
 import checkers.inference.solver.backend.z3.Z3BitVectorFormatTranslator;
 import checkers.inference.solver.frontend.Lattice;
@@ -23,17 +24,17 @@ public class Z3BitVectorEqualityConstraintEncoder extends Z3BitVectorAbstractCon
     }
 
     @Override
-    public BoolExpr encodeVariable_Variable(Slot fst, Slot snd) {
+    public BoolExpr encodeVariable_Variable(VariableSlot fst, VariableSlot snd) {
         return encode(fst, snd);
     }
 
     @Override
-    public BoolExpr encodeVariable_Constant(Slot fst, ConstantSlot snd) {
+    public BoolExpr encodeVariable_Constant(VariableSlot fst, ConstantSlot snd) {
         return encode(fst, snd);
     }
 
     @Override
-    public BoolExpr encodeConstant_Variable(ConstantSlot fst, Slot snd) {
+    public BoolExpr encodeConstant_Variable(ConstantSlot fst, VariableSlot snd) {
         return encode(fst, snd);
     }
 }

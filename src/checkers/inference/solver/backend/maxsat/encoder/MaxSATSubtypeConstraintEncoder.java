@@ -2,6 +2,7 @@ package checkers.inference.solver.backend.maxsat.encoder;
 
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Slot;
+import checkers.inference.model.VariableSlot;
 import checkers.inference.solver.backend.encoder.binary.SubtypeConstraintEncoder;
 import checkers.inference.solver.backend.maxsat.MathUtils;
 import checkers.inference.solver.backend.maxsat.VectorUtils;
@@ -62,7 +63,7 @@ public class MaxSATSubtypeConstraintEncoder extends MaxSATAbstractConstraintEnco
     }
 
     @Override
-    public VecInt[] encodeVariable_Variable(Slot subtype, Slot supertype) {
+    public VecInt[] encodeVariable_Variable(VariableSlot subtype, VariableSlot supertype) {
         // if subtype is top, then supertype is top.
         // if supertype is bottom, then subtype is bottom.
         VecInt supertypeOfTop = VectorUtils.asVec(
@@ -93,7 +94,7 @@ public class MaxSATSubtypeConstraintEncoder extends MaxSATAbstractConstraintEnco
     }
 
     @Override
-    public VecInt[] encodeVariable_Constant(Slot subtype, ConstantSlot supertype) {
+    public VecInt[] encodeVariable_Constant(VariableSlot subtype, ConstantSlot supertype) {
         final Set<AnnotationMirror> mustNotBe = new HashSet<>();
         if (AnnotationUtils.areSame(supertype.getValue(), lattice.bottom)) {
             return VectorUtils.asVecArray(
@@ -110,7 +111,7 @@ public class MaxSATSubtypeConstraintEncoder extends MaxSATAbstractConstraintEnco
     }
 
     @Override
-    public VecInt[] encodeConstant_Variable(ConstantSlot subtype, Slot supertype) {
+    public VecInt[] encodeConstant_Variable(ConstantSlot subtype, VariableSlot supertype) {
         final Set<AnnotationMirror> mustNotBe = new HashSet<>();
         if (AnnotationUtils.areSame(subtype.getValue(), lattice.top)) {
             return VectorUtils.asVecArray(

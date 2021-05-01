@@ -7,7 +7,6 @@ import javax.lang.model.element.AnnotationMirror;
 
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
 
 /**
  * Vertex represents a slot. Two vertices are same if they have same slot id.

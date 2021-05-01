@@ -2,7 +2,6 @@ package checkers.inference.solver.backend.z3.encoder;
 
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.PreferenceConstraint;
-import checkers.inference.model.Slot;
 import checkers.inference.model.VariableSlot;
 import checkers.inference.solver.backend.encoder.preference.PreferenceConstraintEncoder;
 import checkers.inference.solver.backend.z3.Z3BitVectorFormatTranslator;
@@ -24,7 +23,7 @@ public class Z3BitVectorPreferenceConstraintEncoder extends Z3BitVectorAbstractC
      */
     @Override
     public BoolExpr encode(PreferenceConstraint constraint) {
-        Slot variableSlot = constraint.getVariable();
+        VariableSlot variableSlot = constraint.getVariable();
         ConstantSlot constantSlot = constraint.getGoal();
 
         BitVecExpr varBV = z3BitVectorFormatTranslator.serializeVarSlot(variableSlot);
