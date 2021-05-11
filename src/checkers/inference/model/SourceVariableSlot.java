@@ -25,6 +25,13 @@ public class SourceVariableSlot extends VariableSlot {
     protected final TypeMirror actualType;
 
     /**
+     * Should this slot be inserted back into the source code.
+     * This should be false for types have have an implicit annotation
+     * and slots for pre-annotated code.
+     */
+    private boolean insertable = true;
+
+    /**
      * @param location Used to locate this variable in code, see @AnnotationLocation
      * @param id      Unique identifier for this variable
      * @param type the underlying type
@@ -67,6 +74,10 @@ public class SourceVariableSlot extends VariableSlot {
      */
     @Override
     public boolean isInsertable() {
-        return true;
+        return insertable;
+    }
+
+    public void setInsertable(boolean insertable) {
+        this.insertable = insertable;
     }
 }

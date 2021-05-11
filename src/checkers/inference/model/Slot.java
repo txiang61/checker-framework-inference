@@ -18,11 +18,11 @@ public abstract class Slot implements Comparable<Slot> {
      */
     protected final int id;
 
-    // Slots this variable has been merged to.
+    /**
+     * Slots this variable has been merged to.
+     * TODO: Move this to {@link VariableSlot}
+     */
     private final Set<LubVariableSlot> mergedToSlots = new HashSet<>();
-
-    // Refinement variables that refine this slot.
-    private final Set<RefinementVariableSlot> refinedToSlots = new HashSet<>();
 
     public Slot(int id) {
         this.id = id;
@@ -46,10 +46,6 @@ public abstract class Slot implements Comparable<Slot> {
 
     public void addMergedToSlot(LubVariableSlot mergedSlot) {
         this.mergedToSlots.add(mergedSlot);
-    }
-
-    public Set<RefinementVariableSlot> getRefinedToSlots() {
-        return refinedToSlots;
     }
 
     public boolean isMergedTo(Slot other) {

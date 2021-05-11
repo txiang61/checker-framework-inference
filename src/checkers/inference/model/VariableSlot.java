@@ -1,6 +1,9 @@
 package checkers.inference.model;
 
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * VariableSlot is a Slot representing an undetermined value (i.e. a variable we are solving for).
  * After the Solver is run, each VariableSlot should have an assigned value which is then written
@@ -25,6 +28,9 @@ public abstract class VariableSlot extends Slot {
      * Annotation determined for this slot by the Solver.
      */
     private AnnotationLocation location;
+
+    /** Refinement variables that refine this slot. */
+    private final Set<RefinementVariableSlot> refinedToSlots = new HashSet<>();
 
     /**
      * Create a Slot with the given annotation location.
@@ -53,6 +59,10 @@ public abstract class VariableSlot extends Slot {
 
     public void setLocation(AnnotationLocation location) {
         this.location = location;
+    }
+
+    public Set<RefinementVariableSlot> getRefinedToSlots() {
+        return refinedToSlots;
     }
 
     @Override
