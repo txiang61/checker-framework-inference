@@ -14,6 +14,10 @@ import javax.lang.model.element.AnnotationMirror;
  * E.g. int literals, or primitive types are always NonNull in the Nullness type system.  Their values
  * will be represented by a ConstantSlot( @NonNull )
  *
+ * Before the Solver is run, ConstantSlots are represented by @VarAnnot( fixed id ) annotations
+ * on AnnotatedTypeMirrors.  When an annotated type with constant value is encountered in a position that
+ * would generate constraints (e.g. RHS of an assignment ), the @VarAnnots corresponding to its real qualifier
+ * are converted into ConstantSlots which are then used in the generated constraints.
  */
 public class ConstantSlot extends Slot {
 

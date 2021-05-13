@@ -300,13 +300,13 @@ public class DefaultSlotManager implements SlotManager {
         SourceVariableSlot sourceVarSlot;
         if (location.getKind() == AnnotationLocation.Kind.MISSING) {
             //Don't cache slot for MISSING LOCATION. Just create a new one and return.
-            sourceVarSlot = new SourceVariableSlot(location, nextId(), type);
+            sourceVarSlot = new SourceVariableSlot(location, nextId(), type, true);
             addToSlots(sourceVarSlot);
         } else if (locationCache.containsKey(location)) {
             int id = locationCache.get(location);
             sourceVarSlot = (SourceVariableSlot) getSlot(id);
         } else {
-            sourceVarSlot = new SourceVariableSlot(location, nextId(), type);
+            sourceVarSlot = new SourceVariableSlot(location, nextId(), type, true);
             addToSlots(sourceVarSlot);
             locationCache.put(location, sourceVarSlot.getId());
         }

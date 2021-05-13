@@ -2,6 +2,7 @@ package checkers.inference.util;
 
 import checkers.inference.InferenceMain;
 import checkers.inference.SlotManager;
+import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
 import org.checkerframework.framework.type.AnnotatedTypeFactory;
@@ -36,7 +37,7 @@ public class InferenceViewpointAdapter extends AbstractViewpointAdapter {
         assert receiverAnnotation != null && declaredAnnotation != null;
         final Slot recvSlot = slotManager.getSlot(receiverAnnotation);
         final Slot declSlot = slotManager.getSlot(declaredAnnotation);
-        final Slot combVariableSlot = slotManager.createCombVariableSlot(recvSlot, declSlot);
+        final CombVariableSlot combVariableSlot = slotManager.createCombVariableSlot(recvSlot, declSlot);
         constraintManager.addCombineConstraint(recvSlot, declSlot, combVariableSlot);
         return slotManager.getAnnotation(combVariableSlot);
     }

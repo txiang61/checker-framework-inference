@@ -3,20 +3,10 @@ package checkers.inference.model;
 import javax.lang.model.type.TypeMirror;
 
 /**
- * VariableSlot is a Slot representing an undetermined value (i.e. a variable we are solving for).
- * After the Solver is run, each VariableSlot should have an assigned value which is then written
+ * SourceVariableSlot is a VariableSlot representing a type use in the source code with undetermined value.
+ *
+ * After the Solver is run, each SourceVariableSlot should have an assigned value which is then written
  * to the output Jaif file for later reinsertion into the original source code.
- *
- * Before the Solver is run, VariableSlots are represented by @VarAnnot( slot id ) annotations
- * on AnnotatedTypeMirrors.  When an AnnotatedTypeMirror is encountered in a position that would
- * generate constraints (e.g. either side of an assignment ), its @VarAnnots are converted into
- * VariableSlots which are then used in the generated constraints.
- *
- * E.g.  @VarAnnot(0) String s;
- * The above example implies that a VariableSlot with id 0 represents the possible annotations
- * on the declaration of s.
- *
- * Variable slot hold references to slots it is refined by, and slots it is merged to.
  *
  */
 public class SourceVariableSlot extends VariableSlot {
@@ -29,23 +19,26 @@ public class SourceVariableSlot extends VariableSlot {
      * This should be false for types have have an implicit annotation
      * and slots for pre-annotated code.
      */
-    private boolean insertable = true;
+    private boolean insertable;
 
     /**
      * @param location Used to locate this variable in code, see @AnnotationLocation
      * @param id      Unique identifier for this variable
      * @param type the underlying type
+     * @param insertable indicates whether this slot should be inserted back into the source code
      */
-    public SourceVariableSlot(AnnotationLocation location, int id, TypeMirror type) {
+    public SourceVariableSlot(AnnotationLocation location, int id, TypeMirror type, boolean insertable) {
         super(id, location);
         this.actualType = type;
+        this.insertable = insertable;
     }
 
     /**
      * @param type The underlying type of the slot
      * @param id      Unique identifier for this variable
+     * @param insertable indicates whether this slot should be inserted back into the source code
      */
-    public SourceVariableSlot(int id, TypeMirror type) {
+    public SourceVariableSlot(int id, TypeMirror type, boolean insertable) {
         super(id);
         this.actualType = type;
     }
@@ -77,7 +70,4 @@ public class SourceVariableSlot extends VariableSlot {
         return insertable;
     }
 
-    public void setInsertable(boolean insertable) {
-        this.insertable = insertable;
-    }
 }

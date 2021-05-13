@@ -10,6 +10,8 @@ import java.util.Set;
  * Each slot is attached to a code location that can hold an annotation OR has an intrinsic meaning
  * within type-systems. E.g: an int literal is always NonNull but can't hold an annotation,
  * nonetheless, we generate a ConstantSlot representing the literal.
+ *
+ * Slots hold references to slots it is merged to.
  */
 public abstract class Slot implements Comparable<Slot> {
     /**
@@ -59,6 +61,25 @@ public abstract class Slot implements Comparable<Slot> {
             }
         }
         return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Slot other = (Slot) obj;
+        if (id != other.id)
+            return false;
+        return true;
     }
 
     @Override

@@ -18,7 +18,7 @@ import java.util.Set;
  * The above example implies that a VariableSlot with id 0 represents the possible annotations
  * on the declaration of s.
  *
- * Variable slot hold references to slots it is refined by, and slots it is merged to.
+ * Variable slot hold references to slots it is refined by.
  *
  */
 public abstract class VariableSlot extends Slot {
@@ -74,24 +74,4 @@ public abstract class VariableSlot extends Slot {
     public String toString() {
         return this.getClass().getSimpleName() + "(" + id + ")";
     }
-
-    @Override
-    public int hashCode() {
-        return id;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Slot other = (Slot) obj;
-        if (id != other.id)
-            return false;
-        return true;
-    }
-
 }
