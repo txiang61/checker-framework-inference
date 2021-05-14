@@ -1,24 +1,25 @@
 package checkers.inference.model;
 
 
+import javax.lang.model.type.TypeMirror;
 import java.util.HashSet;
 import java.util.Set;
 
 /**
  * VariableSlot is a Slot representing an undetermined value (i.e. a variable we are solving for).
- * After the Solver is run, each VariableSlot should have an assigned value which is then written
- * to the output Jaif file for later reinsertion into the original source code.
+ * After the Solver is run, each VariableSlot has an assigned value which is then written
+ * to the output Jaif file for later insertion into the original source code.
  *
- * Before the Solver is run, VariableSlots are represented by @VarAnnot( slot id ) annotations
- * on AnnotatedTypeMirrors.  When an AnnotatedTypeMirror is encountered in a position that would
- * generate constraints (e.g. either side of an assignment ), its @VarAnnots are converted into
- * VariableSlots which are then used in the generated constraints.
+ * The {@link checkers.inference.InferenceVisitor} and other code can convert between VarAnnots in
+ * AnnotatedTypeMirrors and VariableSlots, which are then used to generate constraints.
  *
  * E.g.  @VarAnnot(0) String s;
+ *
  * The above example implies that a VariableSlot with id 0 represents the possible annotations
  * on the declaration of s.
  *
- * Variable slot hold references to slots it is refined by.
+ * Every VariableSlot has an {@link AnnotationLocation} and the {@link RefinementVariableSlot}s
+ * it is refined by.
  *
  */
 public abstract class VariableSlot extends Slot {
@@ -43,20 +44,11 @@ public abstract class VariableSlot extends Slot {
         this.location = location;
     }
 
-    /**
-     * Create a slot with a default location of
-     * {@link AnnotationLocation#MISSING_LOCATION}.
-     *
-     * @param id Unique identifier for this variable
-     */
-    public VariableSlot(int id) {
-        this(id, AnnotationLocation.MISSING_LOCATION);
-    }
-
     public AnnotationLocation getLocation() {
         return location;
     }
 
+    // TODO: remove this method and make location final.
     public void setLocation(AnnotationLocation location) {
         this.location = location;
     }

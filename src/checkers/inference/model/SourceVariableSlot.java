@@ -4,22 +4,18 @@ import javax.lang.model.type.TypeMirror;
 
 /**
  * SourceVariableSlot is a VariableSlot representing a type use in the source code with undetermined value.
- *
- * After the Solver is run, each SourceVariableSlot should have an assigned value which is then written
- * to the output Jaif file for later reinsertion into the original source code.
- *
  */
 public class SourceVariableSlot extends VariableSlot {
 
-    /** Actual type wrapped with this TypeMirror. */
+    /** The actual type of the type use */
     protected final TypeMirror actualType;
 
     /**
      * Should this slot be inserted back into the source code.
-     * This should be false for types have have an implicit annotation
+     * This should be false for types that have an implicit annotation
      * and slots for pre-annotated code.
      */
-    private boolean insertable;
+    private final boolean insertable;
 
     /**
      * @param location Used to locate this variable in code, see @AnnotationLocation
@@ -31,16 +27,6 @@ public class SourceVariableSlot extends VariableSlot {
         super(id, location);
         this.actualType = type;
         this.insertable = insertable;
-    }
-
-    /**
-     * @param type The underlying type of the slot
-     * @param id      Unique identifier for this variable
-     * @param insertable indicates whether this slot should be inserted back into the source code
-     */
-    public SourceVariableSlot(int id, TypeMirror type, boolean insertable) {
-        super(id);
-        this.actualType = type;
     }
 
     @Override

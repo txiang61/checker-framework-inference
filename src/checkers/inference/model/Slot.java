@@ -5,13 +5,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Slots represent logical variables over which Constraints are generated.
+ * Slots represent constraint variables that represent either
+ * (1) the qualifiers of the real type system {@link ConstantSlot} or
+ * (2) placeholders for which a solution needs to be inferred {@link VariableSlot}.
  *
- * Each slot is attached to a code location that can hold an annotation OR has an intrinsic meaning
- * within type-systems. E.g: an int literal is always NonNull but can't hold an annotation,
- * nonetheless, we generate a ConstantSlot representing the literal.
+ * Each Slot has a unique identification number.
  *
- * Slots hold references to slots it is merged to.
+ * Slots are represented by {@code @VarAnnot( slot id )} annotations in AnnotatedTypeMirrors.
+ * The {@link checkers.inference.VariableAnnotator} generates the Slots for source code.
+ *
+ * A slot maintains the set of {@link LubVariableSlot}s of least-upper bound computations it is
+ * involved in.
+ *
  */
 public abstract class Slot implements Comparable<Slot> {
     /**
@@ -22,7 +27,6 @@ public abstract class Slot implements Comparable<Slot> {
 
     /**
      * Slots this variable has been merged to.
-     * TODO: Move this to {@link VariableSlot}
      */
     private final Set<LubVariableSlot> mergedToSlots = new HashSet<>();
 

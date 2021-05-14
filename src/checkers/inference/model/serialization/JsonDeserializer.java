@@ -18,6 +18,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import checkers.inference.InferenceMain;
+import checkers.inference.model.AnnotationLocation;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.ConstraintManager;
 import checkers.inference.model.Slot;
@@ -205,7 +206,7 @@ public class JsonDeserializer {
     private Slot parseSlot(String slot) {
         if (slot.startsWith(VAR_PREFIX)) {
             int id = Integer.valueOf(slot.split(":")[1]);
-            return new SourceVariableSlot(id, null, true);
+            return new SourceVariableSlot(AnnotationLocation.MISSING_LOCATION, id, null, true);
         } else {
             // TODO: THIS NEEDS FIXING
             AnnotationMirror value = annotationSerializer.deserialize(slot);

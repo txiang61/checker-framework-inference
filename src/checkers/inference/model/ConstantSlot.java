@@ -8,13 +8,11 @@ import checkers.inference.qual.VarAnnot;
 import javax.lang.model.element.AnnotationMirror;
 
 /**
- * Represents variables, literals, etc... that have an inherent meaning in the type-system for which we
- * are inferring values.
+ * Represents a real qualifier of the type system.
  *
- * E.g. int literals, or primitive types are always NonNull in the Nullness type system.  Their values
- * will be represented by a ConstantSlot( @NonNull )
+ * Constant slots are used for elements with fixed types, e.g. literals.
  *
- * Before the Solver is run, ConstantSlots are represented by @VarAnnot( fixed id ) annotations
+ * Before the Solver is run, ConstantSlots are represented by {@code @VarAnnot( fixed id )} annotations
  * on AnnotatedTypeMirrors.  When an annotated type with constant value is encountered in a position that
  * would generate constraints (e.g. RHS of an assignment ), the @VarAnnots corresponding to its real qualifier
  * are converted into ConstantSlots which are then used in the generated constraints.
@@ -24,7 +22,7 @@ public class ConstantSlot extends Slot {
     /**
      * The annotation in the real type system that this slot is equivalent to
      */
-    private AnnotationMirror value;
+    private final AnnotationMirror value;
 
     /**
      *
@@ -37,14 +35,14 @@ public class ConstantSlot extends Slot {
      */
     public ConstantSlot(AnnotationMirror value, int id) {
         super(id);
-        checkAndSetValue(value);
+        checkValue(value);
+        this.value = value;
     }
 
-    private void checkAndSetValue(AnnotationMirror value) {
+    private void checkValue(AnnotationMirror value) {
         if (AnnotationUtils.areSameByClass(value, VarAnnot.class)) {
             throw new BugInCF("Invalid attempt to create a ConstantSlot with VarAnnot as value: " + value);
         }
-        this.value = value;
     }
 
     @Override

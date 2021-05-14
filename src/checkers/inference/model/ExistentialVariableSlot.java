@@ -57,7 +57,7 @@ public class ExistentialVariableSlot extends VariableSlot {
     private final Slot alternativeSlot;
 
     public ExistentialVariableSlot(int id, Slot potentialSlot, Slot alternativeSlot) {
-        super(id);
+        super(id, AnnotationLocation.MISSING_LOCATION);
 
         if (potentialSlot == null) {
             throw new IllegalArgumentException("PotentialSlot cannot be null\n"
@@ -73,6 +73,11 @@ public class ExistentialVariableSlot extends VariableSlot {
 
         this.potentialSlot = potentialSlot;
         this.alternativeSlot = alternativeSlot;
+
+        // The existential slot shares the same location with the potentialSlot
+        if (potentialSlot.isVariable()) {
+            setLocation(((VariableSlot) potentialSlot).getLocation());
+        }
     }
 
     @Override
