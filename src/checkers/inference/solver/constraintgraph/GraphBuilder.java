@@ -22,6 +22,7 @@ import checkers.inference.model.SubtypeConstraint;
 import checkers.inference.model.VariableSlot;
 import dataflow.DataflowVisitor;
 import dataflow.util.DataflowUtils;
+import org.checkerframework.javacutil.BugInCF;
 
 /**
  * GraphBuilder builds the constraint graph and runs graph traversal algorithms
@@ -139,9 +140,12 @@ public class GraphBuilder {
                         }
                     } else {
                         VariableSlot slot = (VariableSlot) next.getSlot();
-                        if (slot.getLocation() != null) {
-                            if (slot.getLocation().getKind().equals(Kind.MISSING)) {
+                        if (slot.getLocation() == null || slot.getLocation().getKind().equals(Kind.MISSING)) {
+                            if (InferenceMain.isHackMode()) {
                                 continue;
+                            } else {
+                                throw new BugInCF("In GraphBuilder.BFSSearch: find a slot of which " +
+                                        "the location is either null or MISSING_LOCATION!");
                             }
                         }
                     }

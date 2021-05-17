@@ -299,9 +299,14 @@ public class DefaultSlotManager implements SlotManager {
     public SourceVariableSlot createSourceVariableSlot(AnnotationLocation location, TypeMirror type) {
         SourceVariableSlot sourceVarSlot;
         if (location.getKind() == AnnotationLocation.Kind.MISSING) {
-            //Don't cache slot for MISSING LOCATION. Just create a new one and return.
-            sourceVarSlot = new SourceVariableSlot(location, nextId(), type, true);
-            addToSlots(sourceVarSlot);
+            if (InferenceMain.isHackMode()) {
+                //Don't cache slot for MISSING LOCATION. Just create a new one and return.
+                sourceVarSlot = new SourceVariableSlot(location, nextId(), type, true);
+                addToSlots(sourceVarSlot);
+            } else {
+                throw new BugInCF("Creating SourceVariableSlot on MISSING_LOCATION!");
+            }
+
         } else if (locationCache.containsKey(location)) {
             int id = locationCache.get(location);
             sourceVarSlot = (SourceVariableSlot) getSlot(id);

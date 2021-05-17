@@ -254,7 +254,7 @@ public class InferenceVisitor<Checker extends InferenceChecker,
             ConstraintManager cManager = InferenceMain.getInstance().getConstraintManager();
             SlotManager sManager = InferenceMain.getInstance().getSlotManager();
             Slot vSlot = sManager.getSlot(type);
-            if (!(vSlot instanceof VariableSlot)) {
+            if (!vSlot.isVariable()) {
                 throw new BugInCF("Trying to add Preference to a constant target: " + vSlot);
             }
             ConstantSlot cSlot = InferenceMain.getInstance().getSlotManager().createConstantSlot(anno);

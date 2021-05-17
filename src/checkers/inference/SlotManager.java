@@ -33,14 +33,13 @@ public interface SlotManager {
     int getNumberOfSlots();
 
     /**
-     * Create new VariableSlot and return the reference to it if no VariableSlot
-     * on this location exists. Otherwise return the reference to existing
-     * VariableSlot on this location. Each location uniquely identifies a
-     * VariableSlot
+     * Create new SourceVariableSlot and return the reference to it if no SourceVariableSlot
+     * on this location exists. Otherwise return the reference to existing SourceVariableSlot
+     * on this location. Each location uniquely identifies a SourceVariableSlot
      *
      * @param location
      *            used to locate this variable in code
-     * @return VariableSlot that corresponds to this location
+     * @return SourceVariableSlot that corresponds to this location
      */
     SourceVariableSlot createSourceVariableSlot(AnnotationLocation location, TypeMirror type);
 
@@ -120,11 +119,11 @@ public interface SlotManager {
      * uniquely identify an ExistentialVariableSlot
      *
      * @param potentialSlot
-     *            a variable whose annotation may or may not exist in source
-     *            code
+     *            a conditional slot created for an {@code AnnotationLocation} if
+     *            an explicit annotation exists in this location of the source code
      * @param alternativeSlot
-     *            the variable which would take part in a constraint if
-     *            potentialSlot does not exist
+     *            the slot which would take part in a constraint if
+     *            {@code potentialSlot} does not exist
      * @return the ExistentialVariableSlot that wraps this potentialSlot and
      *         alternativeSlot
      */

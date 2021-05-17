@@ -1,4 +1,3 @@
-
 package checkers.inference.model.serialization;
 
 import java.util.ArrayList;

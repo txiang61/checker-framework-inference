@@ -25,8 +25,8 @@ import java.util.Set;
 public abstract class VariableSlot extends Slot {
 
     /**
-     * Used to locate this Slot in source code. ASTRecords are written to Jaif files along with the
-     * Annotation determined for this slot by the Solver.
+     * Used to locate this Slot in source code. {@code AnnotationLocation}s are written to Jaif files
+     * along with the annotations determined for this slot by the Solver.
      */
     private AnnotationLocation location;
 
