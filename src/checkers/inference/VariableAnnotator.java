@@ -1629,9 +1629,8 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
         if (declSlot == null) {
             Tree decl = inferenceTypeFactory.declarationFromElement(classDecl);
             if (decl != null) {
-                SourceVariableSlot potentialDeclSlot = createVariable(decl);
-                declSlot = getOrCreateExistentialVariable(potentialDeclSlot, topConstant);
-                classDeclAnnos.put(classDecl, potentialDeclSlot);
+                declSlot = createVariable(decl);
+                classDeclAnnos.put(classDecl, (SourceVariableSlot) declSlot);
 
             } else {
                 declSlot = topConstant;
@@ -1640,6 +1639,22 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
 
         return declSlot;
     }
+
+    /**
+     * Get the {@link VarAnnot} on the class declaration of the TypeElement.
+     * @param ele a type element
+     * @return the {@link VarAnnot} on the class declaration,
+     * or {@code null} if the class declaration of the TypeElement is not handled by the
+     * {@link VariableAnnotator#getOrCreateDeclBound(AnnotatedDeclaredType)}.
+     */
+    public AnnotationMirror getClassDeclVarAnnot(TypeElement ele) {
+        final SourceVariableSlot slot = classDeclAnnos.get(ele);
+        if (slot != null) {
+            return slotManager.getAnnotation(slot);
+        }
+        return null;
+    }
+
 
     private void addDeclarationConstraints(Slot declSlot, Slot instanceSlot) {
         constraintManager.addSubtypeConstraint(instanceSlot, declSlot);
