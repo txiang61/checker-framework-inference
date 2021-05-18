@@ -140,7 +140,7 @@ public class GraphBuilder {
                         }
                     } else {
                         VariableSlot slot = (VariableSlot) next.getSlot();
-                        if (slot.getLocation() == null || slot.getLocation().getKind().equals(Kind.MISSING)) {
+                        if (slot.getLocation() != null && slot.getLocation().getKind().equals(Kind.MISSING)) {
                             if (InferenceMain.isHackMode()) {
                                 continue;
                             } else {
