@@ -205,7 +205,7 @@ public class JsonDeserializer {
     private Slot parseSlot(String slot) {
         if (slot.startsWith(VAR_PREFIX)) {
             int id = Integer.valueOf(slot.split(":")[1]);
-            return new SourceVariableSlot(AnnotationLocation.MISSING_LOCATION, id, null, true);
+            return new SourceVariableSlot(id, AnnotationLocation.MISSING_LOCATION, null, true);
         } else {
             // TODO: THIS NEEDS FIXING
             AnnotationMirror value = annotationSerializer.deserialize(slot);

@@ -101,7 +101,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
     protected final ConstraintManager constraintManager;
 
     /**
-     * Store the corresponding variable slot and annotation mirrors for each
+     * Store the corresponding slot and annotation mirrors for each
      * tree. The second parameter of pair is needed because sometimes the
      * annotation mirror for a tree is calculated (i.e least upper bound for
      * binary tree), and the calculated result is cached in the set.
@@ -198,10 +198,6 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
         return treeToLocation(inferenceTypeFactory, tree);
     }
 
-    protected TypeMirror treeToType(Tree tree) {
-        return TreeUtils.typeOf(tree);
-    }
-
     /**
      * For each method call that uses a method with a polymorphic qualifier, we replace all uses of that polymorphic
      * qualifier with a Variable.  Sometimes we might have to later retrieve that qualifier for a given invocation
@@ -212,7 +208,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
     public SourceVariableSlot getOrCreatePolyVar(Tree tree) {
         SourceVariableSlot polyVar = treeToPolyVar.get(tree);
         if (polyVar == null) {
-            polyVar = slotManager.createSourceVariableSlot(treeToLocation(tree), treeToType(tree));
+            polyVar = slotManager.createSourceVariableSlot(treeToLocation(tree), TreeUtils.typeOf(tree));
             treeToPolyVar.put(tree, polyVar);
         }
 
@@ -231,7 +227,7 @@ public class VariableAnnotator extends AnnotatedTypeScanner<Void,Tree> {
      * @return A new VariableSlot corresponding to tree
      */
     private SourceVariableSlot createVariable(final Tree tree) {
-        final SourceVariableSlot varSlot = createVariable(treeToLocation(tree), treeToType(tree));
+        final SourceVariableSlot varSlot = createVariable(treeToLocation(tree), TreeUtils.typeOf(tree));
 
 //        if (path != null) {
 //            Element element = inferenceTypeFactory.getTreeUtils().getElement(path);

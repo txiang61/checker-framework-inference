@@ -11,11 +11,6 @@ import javax.lang.model.element.AnnotationMirror;
  * Represents a real qualifier of the type system.
  *
  * Constant slots are used for elements with fixed types, e.g. literals.
- *
- * Before the Solver is run, ConstantSlots are represented by {@code @VarAnnot( fixed id )} annotations
- * on AnnotatedTypeMirrors.  When an annotated type with constant value is encountered in a position that
- * would generate constraints (e.g. RHS of an assignment ), the @VarAnnots corresponding to its real qualifier
- * are converted into ConstantSlots which are then used in the generated constraints.
  */
 public class ConstantSlot extends Slot {
 
@@ -33,7 +28,7 @@ public class ConstantSlot extends Slot {
      *
      * The location for slots constructed using this constructor will be AnnotationLocation.MISSING_LOCATION
      */
-    public ConstantSlot(AnnotationMirror value, int id) {
+    public ConstantSlot(int id, AnnotationMirror value) {
         super(id);
         checkValue(value);
         this.value = value;

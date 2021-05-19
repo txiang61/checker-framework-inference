@@ -8,7 +8,7 @@ public class LubVariableSlot extends VariableSlot {
     private final Slot left;
     private final Slot right;
 
-    public LubVariableSlot(AnnotationLocation location, int id, Slot left, Slot right) {
+    public LubVariableSlot(int id, AnnotationLocation location, Slot left, Slot right) {
         super(id, location);
         this.left = left;
         this.right = right;

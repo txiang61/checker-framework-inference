@@ -123,7 +123,7 @@ public class DefaultSlotManager implements SlotManager {
         if (storeConstants) {
             for (Class<? extends Annotation> annoClass : this.realQualifiers) {
                 AnnotationMirror am = new AnnotationBuilder(processingEnvironment, annoClass).build();
-                ConstantSlot constantSlot = new ConstantSlot(am, nextId());
+                ConstantSlot constantSlot = new ConstantSlot(nextId(), am);
                 addToSlots(constantSlot);
                 constantCache.put(am, constantSlot.getId());
             }
@@ -283,7 +283,7 @@ public class DefaultSlotManager implements SlotManager {
     public List<ConstantSlot> getConstantSlots() {
         List<ConstantSlot> constants = new ArrayList<>();
         for (Slot slot : slots.values()) {
-            if (!slot.isVariable()) {
+            if (slot instanceof ConstantSlot) {
                 constants.add((ConstantSlot) slot);
             }
         }
@@ -301,7 +301,7 @@ public class DefaultSlotManager implements SlotManager {
         if (location.getKind() == AnnotationLocation.Kind.MISSING) {
             if (InferenceMain.isHackMode()) {
                 //Don't cache slot for MISSING LOCATION. Just create a new one and return.
-                sourceVarSlot = new SourceVariableSlot(location, nextId(), type, true);
+                sourceVarSlot = new SourceVariableSlot(nextId(), location, type, true);
                 addToSlots(sourceVarSlot);
             } else {
                 throw new BugInCF("Creating SourceVariableSlot on MISSING_LOCATION!");
@@ -311,7 +311,7 @@ public class DefaultSlotManager implements SlotManager {
             int id = locationCache.get(location);
             sourceVarSlot = (SourceVariableSlot) getSlot(id);
         } else {
-            sourceVarSlot = new SourceVariableSlot(location, nextId(), type, true);
+            sourceVarSlot = new SourceVariableSlot(nextId(), location, type, true);
             addToSlots(sourceVarSlot);
             locationCache.put(location, sourceVarSlot.getId());
         }
@@ -328,7 +328,7 @@ public class DefaultSlotManager implements SlotManager {
 
         // Create new refinement variable slot, as well as the equality constraint to the value slot
         RefinementVariableSlot refinementVariableSlot;
-        refinementVariableSlot = new RefinementVariableSlot(location, nextId(), declarationSlot);
+        refinementVariableSlot = new RefinementVariableSlot(nextId(), location, declarationSlot);
         addToSlots(refinementVariableSlot);
         if (valueSlot != null) {
             // If the rhs value slot passed in is non-null, create the equality constraint on it
@@ -351,7 +351,7 @@ public class DefaultSlotManager implements SlotManager {
             int id = constantCache.get(value);
             constantSlot = (ConstantSlot) getSlot(id);
         } else {
-            constantSlot = new ConstantSlot(value, nextId());
+            constantSlot = new ConstantSlot(nextId(), value);
             addToSlots(constantSlot);
             constantCache.put(value, constantSlot.getId());
         }
@@ -366,7 +366,7 @@ public class DefaultSlotManager implements SlotManager {
             int id = combSlotPairCache.get(pair);
             combVariableSlot = (CombVariableSlot) getSlot(id);
         } else {
-            combVariableSlot = new CombVariableSlot(null, nextId(), receiver, declared);
+            combVariableSlot = new CombVariableSlot(nextId(), null, receiver, declared);
             addToSlots(combVariableSlot);
             combSlotPairCache.put(pair, combVariableSlot.getId());
         }
@@ -383,7 +383,7 @@ public class DefaultSlotManager implements SlotManager {
             lubVariableSlot = (LubVariableSlot) getSlot(id);
         } else {
             // We need a non-null location in the future for better debugging outputs
-            lubVariableSlot = new LubVariableSlot(null, nextId(), left, right);
+            lubVariableSlot = new LubVariableSlot(nextId(), null, left, right);
             addToSlots(lubVariableSlot);
             lubSlotPairCache.put(pair, lubVariableSlot.getId());
         }
@@ -414,7 +414,7 @@ public class DefaultSlotManager implements SlotManager {
 
         // create the arithmetic var slot if it doesn't exist for the given location
         if (!arithmeticSlotCache.containsKey(location)) {
-            ArithmeticVariableSlot slot = new ArithmeticVariableSlot(location, nextId());
+            ArithmeticVariableSlot slot = new ArithmeticVariableSlot(nextId(), location);
             addToSlots(slot);
             arithmeticSlotCache.put(location, slot.getId());
             return slot;

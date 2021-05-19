@@ -119,8 +119,7 @@ public interface SlotManager {
      * uniquely identify an ExistentialVariableSlot
      *
      * @param potentialSlot
-     *            a conditional slot created for an {@code AnnotationLocation} if
-     *            an explicit annotation exists in this location of the source code
+     *            a slot whose annotation may or may not exist in source
      * @param alternativeSlot
      *            the slot which would take part in a constraint if
      *            {@code potentialSlot} does not exist
@@ -160,7 +159,7 @@ public interface SlotManager {
      */
      AnnotationMirror createEquivalentVarAnno(final AnnotationMirror realQualifier);
 
-    /** Return the variable identified by the given id or null if no such variable has been added */
+    /** Return the slot identified by the given id or null if no such slot has been added */
     Slot getSlot( int id );
 
     /**

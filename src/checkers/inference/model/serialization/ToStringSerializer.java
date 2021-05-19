@@ -89,22 +89,15 @@ public class ToStringSerializer implements Serializer<String, String> {
     }
 
     public String serializeSlots(Iterable<Slot> slots, String delimiter) {
-        // Split slots into two sublists, one for all VariableSlots (and subclasses), and the other
-        // for any other kinds of slots
-        Map<Integer, String> serializedVarSlots = new TreeMap<>();
-        Set<String> serializedOtherSlots = new TreeSet<>();
+        Map<Integer, String> serializedSlots = new TreeMap<>();
 
         for (Slot slot : slots) {
-            // sort the varSlots by ID through insertion to TreeMap
-            serializedVarSlots.put(slot.getId(),
+            // sort the slots by ID through insertion to TreeMap
+            serializedSlots.put(slot.getId(),
                     getCurrentIndentString() + slot.serialize(this));
         }
 
-        List<String> serializedSlots = new ArrayList<>();
-        serializedSlots.addAll(serializedVarSlots.values());
-        serializedSlots.addAll(serializedOtherSlots);
-
-        return SystemUtil.join(delimiter, serializedSlots);
+        return SystemUtil.join(delimiter, serializedSlots.values());
     }
 
     public String serializeConstraints(Iterable<Constraint> constraints, String delimiter) {

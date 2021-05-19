@@ -6,7 +6,7 @@ package checkers.inference.model;
  */
 public class ArithmeticVariableSlot extends VariableSlot {
 
-    public ArithmeticVariableSlot(AnnotationLocation location, int id) {
+    public ArithmeticVariableSlot(int id, AnnotationLocation location) {
         super(id, location);
     }
 

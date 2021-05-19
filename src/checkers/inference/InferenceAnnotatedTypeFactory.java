@@ -123,12 +123,6 @@ public class InferenceAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
     // See setRoot below
     public int compilationUnitsHandled = 0;
 
-    // there are locations in the code that are constant for which we still need to apply a variable
-    // though we know the value of that variable.  In this case, rather than creating a new variable
-    // for every one of these locations and increase the number of variables we solve for, use
-    // the same variable slot for all of these locations.  This map contains those variables.
-    private Map<Class<? extends Annotation>, Slot> constantToVarAnnot = new HashMap<>();
-
     public InferenceAnnotatedTypeFactory(
             InferenceChecker inferenceChecker,
             boolean withCombineConstraints,
@@ -266,10 +260,6 @@ public class InferenceAnnotatedTypeFactory extends BaseAnnotatedTypeFactory {
     @Override
     protected DependentTypesHelper createDependentTypesHelper() {
         return null;
-    }
-
-    protected Map<Class<? extends Annotation>, Slot> getConstantVars() {
-        return Collections.unmodifiableMap(constantToVarAnnot);
     }
 
     /**

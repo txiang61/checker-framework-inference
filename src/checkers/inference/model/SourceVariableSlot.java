@@ -23,7 +23,7 @@ public class SourceVariableSlot extends VariableSlot {
      * @param type the underlying type
      * @param insertable indicates whether this slot should be inserted back into the source code
      */
-    public SourceVariableSlot(AnnotationLocation location, int id, TypeMirror type, boolean insertable) {
+    public SourceVariableSlot(int id, AnnotationLocation location, TypeMirror type, boolean insertable) {
         super(id, location);
         this.actualType = type;
         this.insertable = insertable;
