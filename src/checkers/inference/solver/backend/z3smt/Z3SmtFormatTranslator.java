@@ -7,7 +7,7 @@ import checkers.inference.model.ExistentialVariableSlot;
 import checkers.inference.model.LubVariableSlot;
 import checkers.inference.model.RefinementVariableSlot;
 import checkers.inference.model.Slot;
-import checkers.inference.model.VariableSlot;
+import checkers.inference.model.SourceVariableSlot;
 import checkers.inference.solver.backend.AbstractFormatTranslator;
 import checkers.inference.solver.backend.z3smt.encoder.Z3SmtSoftConstraintEncoder;
 import checkers.inference.solver.frontend.Lattice;
@@ -44,7 +44,7 @@ public abstract class Z3SmtFormatTranslator<SlotEncodingT, SlotSolutionT>
     protected abstract SlotEncodingT serializeConstantSlot(ConstantSlot slot);
 
     @Override
-    public SlotEncodingT serialize(VariableSlot slot) {
+    public SlotEncodingT serialize(SourceVariableSlot slot) {
         return serializeVarSlot(slot);
     }
 
@@ -81,7 +81,7 @@ public abstract class Z3SmtFormatTranslator<SlotEncodingT, SlotSolutionT>
     
     protected abstract Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT> createSoftConstraintEncoder();
 
-    public abstract BoolExpr encodeSlotWellformnessConstraint(Slot slot);
+    public abstract BoolExpr encodeSlotWellformednessConstraint(Slot slot);
 
     public abstract BoolExpr encodeSlotPreferenceConstraint(Slot slot);
 

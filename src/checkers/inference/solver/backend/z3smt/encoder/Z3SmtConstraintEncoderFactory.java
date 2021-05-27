@@ -8,7 +8,7 @@ import com.microsoft.z3.Context;
 
 /**
  * Abstract Z3 implementation of {@link
- * checkers.inference.solver.backend.encoder.ConstraintEncoderFactory} for integer theory.
+ * checkers.inference.solver.backend.encoder.ConstraintEncoderFactory}.
  * Subclasses must specify the exact encoders used.
  *
  * @see checkers.inference.solver.backend.encoder.ConstraintEncoderFactory
