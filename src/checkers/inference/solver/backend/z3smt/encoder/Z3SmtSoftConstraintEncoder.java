@@ -74,6 +74,6 @@ public abstract class Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT>
                 encodePreferenceConstraint((PreferenceConstraint) constraint);
             }
         }
-    	return softConstraints.toString();
+        return softConstraints.toString();
     }
 }
