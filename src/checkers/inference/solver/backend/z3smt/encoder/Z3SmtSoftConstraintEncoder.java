@@ -21,7 +21,7 @@ import checkers.inference.solver.frontend.Lattice;
 public abstract class Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT>
         extends Z3SmtAbstractConstraintEncoder<SlotEncodingT, SlotSolutionT> {
 
-	protected StringBuilder softConstraints;
+    protected final StringBuilder softConstraints;
 
     public Z3SmtSoftConstraintEncoder(
             Lattice lattice,
