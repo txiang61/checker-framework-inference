@@ -24,7 +24,7 @@ public abstract class Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT>
 	protected StringBuilder softConstraints;
 
     public Z3SmtSoftConstraintEncoder(
-    	    Lattice lattice,
+            Lattice lattice,
             Context ctx,
             Z3SmtFormatTranslator<SlotEncodingT, SlotSolutionT> z3SmtFormatTranslator) {
         super(lattice, ctx, z3SmtFormatTranslator);
