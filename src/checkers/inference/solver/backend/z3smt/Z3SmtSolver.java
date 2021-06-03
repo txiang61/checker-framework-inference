@@ -56,7 +56,7 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
     /**
      * This fields store the mapping from the constraint string ID to the constraint.
      * In non-optimizing mode, all ID-constraint mappings are cached during encoding,
-     * so that we can retrieve the unsat constraints later using the constraint name
+     * so that we can retrieve the unsat constraints later using the constraint name.
      */
     protected final Map<String, Constraint> serializedConstraints = new HashMap<>();
 
