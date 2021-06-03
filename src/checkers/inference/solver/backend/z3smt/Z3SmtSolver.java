@@ -404,6 +404,7 @@ public class Z3SmtSolver<SlotEncodingT, SlotSolutionT>
                         // remove brackets surrounding negative numbers
                         value = value.substring(1, value.length() - 1);
                         // remove space between - and the number itself
+                        // TODO: clean up string operations.
                         value = String.join("", value.split(" "));
                     }
                     resultsLine.append(" " + value);
