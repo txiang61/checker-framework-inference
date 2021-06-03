@@ -9,8 +9,8 @@ package checkers.inference.model;
  */
 public class ComparisonVariableSlot extends VariableSlot {
 
-    public ComparisonVariableSlot(AnnotationLocation location, int id) {
-        super(location, id);
+    public ComparisonVariableSlot(int id, AnnotationLocation location) {
+        super(id, location);
     }
 
     @Override

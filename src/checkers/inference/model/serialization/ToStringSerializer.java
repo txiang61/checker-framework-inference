@@ -17,6 +17,7 @@ import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
 import checkers.inference.model.ComparisonConstraint;
+import checkers.inference.model.ComparisonVariableSlot;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.EqualityConstraint;
@@ -374,6 +375,17 @@ public class ToStringSerializer implements Serializer<String, String> {
         final StringBuilder sb = new StringBuilder();
         sb.append(slot.getId());
         optionallyShowVerbose(slot, sb);
+        return sb.toString();
+    }
+
+    @Override
+    public String serialize(ComparisonVariableSlot slot) {
+        final StringBuilder sb = new StringBuilder();
+        sb.append(slot.getId());
+        if (showVerboseVars) {
+            // TODO: show more comparison-specific details
+            optionallyShowVerbose(slot, sb);
+        }
         return sb.toString();
     }
 

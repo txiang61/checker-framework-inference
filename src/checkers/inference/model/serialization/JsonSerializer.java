@@ -17,6 +17,7 @@ import checkers.inference.model.CombVariableSlot;
 import checkers.inference.model.CombineConstraint;
 import checkers.inference.model.ComparableConstraint;
 import checkers.inference.model.ComparisonConstraint;
+import checkers.inference.model.ComparisonVariableSlot;
 import checkers.inference.model.ConstantSlot;
 import checkers.inference.model.Constraint;
 import checkers.inference.model.EqualityConstraint;
@@ -256,6 +257,11 @@ public class JsonSerializer implements Serializer<String, JSONObject> {
 
     @Override
     public String serialize(ArithmeticVariableSlot slot) {
+        return serializeSlot(slot);
+    }
+
+    @Override
+    public String serialize(ComparisonVariableSlot slot) {
         return serializeSlot(slot);
     }
 
