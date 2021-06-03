@@ -32,7 +32,7 @@ public abstract class Z3SmtSoftConstraintEncoder<SlotEncodingT, SlotSolutionT>
     }
 
     protected void addSoftConstraint(Expr serializedConstraint, int weight) {
-    	softConstraints.append("(assert-soft " + serializedConstraint + " :weight " + weight + ")\n");
+        softConstraints.append("(assert-soft " + serializedConstraint + " :weight " + weight + ")\n");
     }
     
     public String encodeAndGetSoftConstraints(Collection<Constraint> constraints) {
